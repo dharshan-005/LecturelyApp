@@ -1,0 +1,316 @@
+--- Frontend ---
+Navbar scroll fixing - Done
+Login - Done
+Tools in home page - 
+Tools individual page - 
+
+Summary component:
+  > Text Summary - Done
+  > Doc Summary - 
+  > Video Summary - 
+
+If the user login:
+  > Can save and see the history of thier summary process with the original and the summarized text - 
+Navigating to contact - Done
+Responsive - 
+
+--- Backend ---
+MongoDB creation
+Firebase creation
+Mock data
+Sample Video
+Store the data - subtitle, transcript, translate
+
+--- Pricing --- (If needed)
+Need to see other translation applications for their pricing models and decide accordingly.
+It should be affordable for students.
+
+--- Additional ---
+Extension to browsers -
+Notes generation from video -
+
+"use client";
+
+import { UploadView } from "../../components/UploadView";
+import { useApp } from "../../context/AppContext";
+import { useRouter } from "next/navigation";
+
+export default function UploadPage() {
+  const { setFile, targetLang, setTargetLang } = useApp();
+  const router = useRouter();
+
+  return (
+    <UploadView
+      file={null}
+      targetLang={targetLang}
+      isDarkMode={false}
+      toggleTheme={() => {}}
+      onFileUpload={(e) => {
+        if (e.target.files?.[0]) setFile(e.target.files[0]);
+      }}
+      onLanguageChange={(e) => setTargetLang(e.target.value)}
+      onStart={() => router.push("/processing")}
+    />
+  );
+}
+
+  background: linear-gradient(120deg, #dbeafe, #eef2ff);
+  bg-[linear-gradient(120deg,#dbeafe,#eef2ff)]
+
+
+-----> app/page.tsx:-
+
+"use client";
+
+import React, { useState, ChangeEvent } from "react";
+// import { Subtitle, AppView } from "../types";
+import { UploadView } from "../components/UploadView";
+// import { ProcessingView } from "../components/ProcessingView";
+// import { EditorView } from "../components/EditorView";
+import { Navbar } from "@/components/Navbar";
+import Contact from "@/components/Contact";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+
+import { useApp } from "@/context/AppContext";
+import Summary from "@/components/Summary";
+import Tabs from "@/components/Tabs";
+import LectureSummary from "@/components/Summarize";
+
+// import { parseSRT } from "@/utils/parseSRT";
+
+// --- Mock Data ---
+// const DEMO_TRANSCRIPT: Subtitle[] = [
+//   {
+//     id: 1,
+//     start: "00:00:01,000",
+//     end: "00:00:04,500",
+//     original: "Welcome to this introduction to Python programming.",
+//     translated: "Bienvenido a esta introducción a la programación en Python.",
+//   },
+//   {
+//     id: 2,
+//     start: "00:00:05,000",
+//     end: "00:00:09,000",
+//     original: "Today we are going to look at variables and data types.",
+//     translated: "Hoy vamos a ver las variables y los tipos de datos.",
+//   },
+//   {
+//     id: 3,
+//     start: "00:00:09,500",
+//     end: "00:00:13,200",
+//     original: "It is crucial to understand how memory management works.",
+//     translated: "Es crucial entender cómo funciona la gestión de memoria.",
+//   },
+//   {
+//     id: 4,
+//     start: "00:00:14,000",
+//     end: "00:00:18,000",
+//     original: "Let's dive right into the code editor.",
+//     translated: "Vamos directamente al editor de código.",
+//   },
+// ];
+
+export default function LecturelyApp() {
+  // const [view, setView] = useState<AppView>("upload");
+  // const [file, setFile] = useState<File | null>(null);
+
+  const { file, setFile, transcriptText } = useApp();
+
+  // --- Theme State ---
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+
+  // const [progress, setProgress] = useState<number>(0);
+  // const [processingStage, setProcessingStage] = useState<string>("");
+
+  // const [subtitles, setSubtitles] = useState<Subtitle[]>(DEMO_TRANSCRIPT);
+  const [targetLang, setTargetLang] = useState<string>("Tamil");
+
+  // --- Handlers ---
+  const toggleTheme = () => setIsDarkMode(!isDarkMode); // <--- Toggle Handler
+
+  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const handleLanguageChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setTargetLang(e.target.value);
+  };
+
+  // const handleSubtitleChange = (id: number, newText: string) => {
+  //   setSubtitles((prev) =>
+  //     prev.map((sub) => (sub.id === id ? { ...sub, translated: newText } : sub))
+  //   );
+  // };
+
+  const startProcessing = () => {
+    if (!file) {
+      alert("Please upload a video first");
+      return;
+    }
+
+    router.push("/processing");
+  };
+
+  // const startProcessing = async () => {
+  //   if (!file) {
+  //     alert("Please upload a video first");
+  //     return;
+  //   }
+
+  //   setView("processing");
+  //   setProgress(10);
+  //   setProcessingStage("Uploading video...");
+
+  //   const formData = new FormData();
+  //   formData.append("video", file); // IMPORTANT
+
+  //   try {
+  //     setProcessingStage("Processing video & generating subtitles...");
+
+  //     const res = await fetch("http://localhost:5000/api/subtitle", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+
+  //     if (!res.ok) {
+  //       throw new Error("Backend failed");
+  //     }
+
+  //     const srtText = await res.text();
+
+  //     // setProcessingStage("Parsing subtitles...");
+  //     // setProgress(80);
+
+  //     const parsed = parseSRT(srtText);
+  //     setSubtitles(parsed);
+
+  //     setProgress(100);
+  //     setView("editor");
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert("Failed to process video");
+  //     setView("upload");
+  //   }
+  // };
+
+  // setProgress(0);
+
+  // const animateProgress = (
+  //   start: number,
+  //   end: number,
+  //   duration: number,
+  //   callback?: () => void
+  // ) => {
+  //   let startTimestamp: number | null = null;
+  //   const step = (timestamp: number) => {
+  //     if (!startTimestamp) startTimestamp = timestamp;
+  //     const progressRatio = Math.min(
+  //       (timestamp - startTimestamp) / duration,
+  //       1
+  //     );
+  //     setProgress(Math.floor(progressRatio * (end - start) + start));
+  //     if (progressRatio < 1) {
+  //       window.requestAnimationFrame(step);
+  //     } else {
+  //       if (callback) callback();
+  //     }
+  //   };
+  //   window.requestAnimationFrame(step);
+  // };
+
+  // const downloadSRT = () => {
+  //   let srtContent = "";
+  //   subtitles.forEach((sub, index) => {
+  //     srtContent += `${index + 1}\n${sub.start} --> ${sub.end}\n${
+  //       sub.translated
+  //     }\n\n`;
+  //   });
+  //   const blob = new Blob([srtContent], { type: "text/plain" });
+  //   const url = URL.createObjectURL(blob);
+  //   const a = document.createElement("a");
+  //   a.href = url;
+  //   a.download = `lecturely_export_${targetLang.toLowerCase()}.srt`;
+  //   a.click();
+  //   URL.revokeObjectURL(url);
+  // };
+
+  // const [activeTab, setActiveTab] = useState<string>("video-translator");
+
+  const router = useRouter();
+
+  return (
+    <>
+      <div className={isDarkMode ? "dark" : ""}>
+        <div className="from-indigo-50 to-white dark:from-slate-950 dark:to-slate-900 bg-linear-to-br text-slate-800 dark:text-slate-200 font-sans transition-colors duration-300">
+          <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+
+          {/* --- Upload View --- */}
+
+          <UploadView
+            file={file}
+            targetLang={targetLang}
+            isDarkMode={isDarkMode}
+            toggleTheme={toggleTheme}
+            onFileUpload={handleFileUpload}
+            onLanguageChange={handleLanguageChange}
+            onStart={startProcessing}
+          />
+
+          {/* {view === "upload" && (
+            <UploadView
+              file={file}
+              targetLang={targetLang}
+              isDarkMode={isDarkMode}
+              toggleTheme={toggleTheme}
+              onFileUpload={handleFileUpload}
+              onLanguageChange={handleLanguageChange}
+              onStart={startProcessing}
+            />
+          )} */}
+
+          {/* --- Processing --- */}
+          {/* 
+          {view === "processing" && (
+            <div className="dark:bg-slate-950 min-h-screen">
+              <ProcessingView progress={progress} stage={processingStage} />
+            </div>
+          )} */}
+
+          {/* --- Editor View --- */}
+
+          {/* {view === "editor" && (
+            <EditorView
+              subtitles={subtitles}
+              targetLang={targetLang}
+              isDarkMode={isDarkMode}
+              toggleTheme={toggleTheme}
+              onSubtitleChange={handleSubtitleChange}
+              onDownload={downloadSRT}
+              onNewProject={() => setView("upload")}
+            />
+          )} */}
+
+          {/* Tabs */}
+          <div>
+            <Tabs />
+          </div>
+
+          {/* Summary part */}
+          <div>
+            <Summary />
+            <LectureSummary transcriptText={transcriptText} />
+          </div>
+
+          <div>
+            <hr className="border-2 mt-2" />
+            <Contact />
+          </div>
+        </div>
+      </div>
+      {/* </div> */}
+    </>
+  );
+}

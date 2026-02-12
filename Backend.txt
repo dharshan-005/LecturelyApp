@@ -1,0 +1,48 @@
+backend/
+│
+├── server.js
+├── routes/
+│   └── translate.js
+│
+├── services/
+│   ├── audioExtractor.js
+│   ├── asrService.js
+│   ├── translationService.js
+│   └── subtitleService.js
+│
+├── python/
+│   ├── vosk_asr.py
+│   └── translate.py
+│
+├── uploads/
+│   ├── videos/
+│   └── audio/
+│
+└── models/
+    └── vosk-model-en/
+
+
+backend/
+│
+├── server.js
+├── routes/
+│   └── subtitle.js
+│
+├── uploads/
+│   └── input.wav
+│
+├── python/
+│   └── asr_to_srt.py
+│
+├── output/
+│   └── output.srt
+│
+└── models/
+    └── vosk-model-en-us-0.22/
+
+
+
+ffmpeg:
+ffmpeg -i voice2.mp3 -ar 16000 -ac 1 sample2.wav
+ffmpeg -loop 1 -i .\Link.jpg -i sample2.wav -c:v libx264 -c:a aac -shortest test.mp4
+

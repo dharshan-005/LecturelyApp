@@ -1,0 +1,13 @@
+/lecturelyai
+
+node_modules/
+backend/node_modules/
+
+# Large ML models
+backend/models/vosk-model-en-us-0.22
+
+# Logs
+*.log
+
+# Environment variables
+.env
