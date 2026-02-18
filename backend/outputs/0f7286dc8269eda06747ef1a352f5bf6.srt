@@ -1,0 +1,12 @@
+1
+00:00:00,000 --> 00:00:06,320
+ Artificial intelligence is rapidly transforming the way people live, work, and interact with technology.
+
+2
+00:00:06,320 --> 00:00:11,280
+ By enabling machines to learn from data, recognize patterns, and make decisions,
+
+3
+00:00:11,280 --> 00:00:14,720
+ AI has improved efficiency across various industries.
+

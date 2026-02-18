@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Play, Download, Globe, Edit3, Moon, Sun, Menu, X } from "lucide-react";
 import { Subtitle } from "../types";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -17,6 +17,12 @@ interface EditorViewProps {
   onNewProject: () => void;
 
   videoSrc?: string | null;
+}
+
+function timeToSeconds(time: string) {
+  const [hms, ms] = time.split(",");
+  const [h, m, s] = hms.split(":").map(Number);
+  return h * 3600 + m * 60 + s + Number(ms) / 1000;
 }
 
 export const EditorView: React.FC<EditorViewProps> = ({
@@ -44,6 +50,26 @@ export const EditorView: React.FC<EditorViewProps> = ({
   const router = useRouter();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [currentTime, setCurrentTime] = useState(0);
+
+  const activeSubtitle = subtitles.find((sub) => {
+    const startSec = timeToSeconds(sub.start);
+    const endSec = timeToSeconds(sub.end);
+
+    return currentTime >= startSec && currentTime <= endSec;
+  });
+
+  // const activeSubtitle = subtitles.find((sub) => {
+  //   console.log("TYPE:", typeof sub.start);
+  //   console.log("start:", sub.start);
+  //   console.log("currentTime:", currentTime);
+  //   console.log("end:", sub.end);
+  //   // const start = timeToSeconds(sub.start);
+  //   // const end = timeToSeconds(sub.end);
+  //   return currentTime >= sub.start && currentTime <= sub.end;
+  // });
 
   return (
     <>
@@ -158,9 +184,15 @@ export const EditorView: React.FC<EditorViewProps> = ({
               <div className="w-full aspect-video overflow-hidden relative group">
                 {videoSrc ? (
                   <video
+                    ref={videoRef}
                     src={videoSrc}
                     controls
                     preload="metadata"
+                    onTimeUpdate={() => {
+                      if (videoRef.current) {
+                        setCurrentTime(videoRef.current.currentTime);
+                      }
+                    }}
                     className="absolute inset-0 w-full h-full object-contain"
                   />
                 ) : (
@@ -175,7 +207,8 @@ export const EditorView: React.FC<EditorViewProps> = ({
                 {subtitles.length > 0 && (
                   <div className="absolute bottom-[8%] left-0 right-0 flex justify-center px-4 pointer-events-none">
                     <span className="bg-black/50 text-white px-4 py-2 rounded-lg text-[10px] md:text-base lg:text-lg leading-relaxed text-center max-w-[90%] backdrop-blur-sm">
-                      {subtitles[0].translated}
+                      {/* {subtitles[0].translated} */}
+                      {activeSubtitle?.translated}
                     </span>
                   </div>
                 )}

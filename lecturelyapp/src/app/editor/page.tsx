@@ -16,6 +16,8 @@ export default function EditorPage() {
     hydrated,
   } = useApp();
 
+  console.log("Editor subtitles:", subtitles);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -28,6 +30,7 @@ export default function EditorPage() {
   if (!videoUrl) return null;
 
   console.log({ hydrated, videoUrl, subtitlesLength: subtitles.length });
+  console.log("VIDEO URL:", videoUrl);
 
   return (
     <EditorView

@@ -39,7 +39,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
-  useLayoutEffect(() => {
+  useLayoutEffect(() => {   
     console.log("restoring from local")
     const storedVideoUrl = localStorage.getItem("videoUrl");
     const storedSubs = localStorage.getItem("subtitles");

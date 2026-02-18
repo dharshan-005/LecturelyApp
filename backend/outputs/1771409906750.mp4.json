@@ -1,0 +1,65 @@
+{
+	"systeminfo": "WHISPER : COREML = 0 | OPENVINO = 0 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | OPENMP = 1 | REPACK = 1 | ",
+	"model": {
+		"type": "small",
+		"multilingual": true,
+		"vocab": 51865,
+		"audio": {
+			"ctx": 1500,
+			"state": 768,
+			"head": 12,
+			"layer": 12
+		},
+		"text": {
+			"ctx": 448,
+			"state": 768,
+			"head": 12,
+			"layer": 12
+		},
+		"mels": 80,
+		"ftype": 1
+	},
+	"params": {
+		"model": "C:\\Users\\vkdha\\OneDrive\\Documents\\Desktop\\LecturelyAI\\backend\\whisper.cpp\\models\\ggml-small.bin",
+		"language": "en",
+		"translate": false
+	},
+	"result": {
+		"language": "en"
+	},
+	"transcription": [
+		{
+			"timestamps": {
+				"from": "00:00:00,000",
+				"to": "00:00:06,320"
+			},
+			"offsets": {
+				"from": 0,
+				"to": 6320
+			},
+			"text": " Artificial intelligence is rapidly transforming the way people live, work, and interact with technology."
+		},
+		{
+			"timestamps": {
+				"from": "00:00:06,320",
+				"to": "00:00:11,280"
+			},
+			"offsets": {
+				"from": 6320,
+				"to": 11280
+			},
+			"text": " By enabling machines to learn from data, recognize patterns, and make decisions,"
+		},
+		{
+			"timestamps": {
+				"from": "00:00:11,280",
+				"to": "00:00:14,720"
+			},
+			"offsets": {
+				"from": 11280,
+				"to": 14720
+			},
+			"text": " AI has improved efficiency across various industries."
+		}
+	]
+}
