@@ -1,34 +1,38 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile
+import pdfplumber
+import docx
+from routes.subtitle import router as subtitle_router
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from services.summarizer import summarize_text
+from fastapi.staticfiles import StaticFiles
 
-app = FastAPI(title="Lecturely AI Services")
+app = FastAPI()
+app.include_router(subtitle_router)
 
-# ✅ ADD THIS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Next.js
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-class SummaryRequest(BaseModel):
-    text: str
-    min_length: int = 30
-    max_length: int = 130
-    chunk_size: int = 400
+app.mount("/temp", StaticFiles(directory="temp"), name="temp")
 
-class SummaryResponse(BaseModel):
-    summary: str
+@app.post("/extract")
+async def extract_text(file: UploadFile):
+    content = ""
 
-@app.post("/api/summarize", response_model=SummaryResponse)
-async def summarize(req: SummaryRequest):
-    summary = summarize_text(
-        req.text,
-        req.min_length,
-        req.max_length,
-        req.chunk_size
-    )
-    return {"summary": summary}
+    if file.filename.endswith(".pdf"):
+        with pdfplumber.open(file.file) as pdf:
+            for page in pdf.pages:
+                content += page.extract_text() or ""
+
+    elif file.filename.endswith(".docx"):
+        doc = docx.Document(file.file)
+        for para in doc.paragraphs:
+            content += para.text + "\n"
+
+    else:
+        return {"error": "Unsupported file type"}
+
+    return {"extractedText": content}

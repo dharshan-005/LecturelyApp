@@ -1,76 +1,32 @@
-// import { NextResponse } from "next/server";
-// import { GoogleGenAI } from "@google/genai";
-// import mammoth from "mammoth";
+import { generateSummary } from "@/lib/summarizer";
+import { NextResponse } from "next/dist/server/web/spec-extension/response";
 
-// // export const runtime = "nodejs";
+export async function POST(req: Request) {
+  const formData = await req.formData();
 
-// const ai = new GoogleGenAI({
-//   apiKey: process.env.GEMINI_API_KEY!,
-// });
+  const file = formData.get("file") as File;
+  const language = formData.get("language") as string;
+  const length = formData.get("length") as string;
+  const format = formData.get("format") as string;
 
-// export async function POST(req: Request) {
-//   try {
-//     const formData = await req.formData();
-//     const file = formData.get("file") as File | null;
+  // Send file to Python extractor
+  const pythonRes = await fetch("http://localhost:8000/extract", {
+    method: "POST",
+    body: formData,
+  });
 
-//     if (!file) {
-//       return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
-//     }
+  const { extractedText } = await pythonRes.json();
 
-//     const buffer = Buffer.from(await file.arrayBuffer());
-//     let extractedText = "";
+  const summary = await generateSummary(
+    extractedText,
+    language,
+    length,
+    format,
+  );
 
-//     // ✅ PDF (WORKS 100%)
-//     if (file.type === "application/pdf") {
-//       const pdfParse = require("pdf-parse");
-//       const data = await pdfParse(buffer);
-//       // console.log("PDF text length:", data.text.length);
-//       extractedText = data.text;
-//     }
+  return NextResponse.json({ summary, original: extractedText });
+}
 
-//     // ✅ DOCX
-//     else if (
-//       file.type ===
-//       "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-//     ) {
-//       const result = await mammoth.extractRawText({ buffer });
-//       extractedText = result.value;
-//     } else {
-//       return NextResponse.json(
-//         { error: "Unsupported file type" },
-//         { status: 400 }
-//       );
-//     }
-
-//     if (!extractedText.trim()) {
-//       return NextResponse.json(
-//         { error: "No readable text found in document" },
-//         { status: 400 }
-//       );
-//     }
-
-//     const safeText = extractedText.slice(0, 4000);
-
-//     const response = await ai.models.generateContent({
-//       model: "gemini-2.5-flash",
-//       contents: [
-//         {
-//           role: "user",
-//           parts: [
-//             {
-//               text: `Summarize the following document clearly and concisely:\n\n${safeText}`,
-//             },
-//           ],
-//         },
-//       ],
-//     });
-
-//     return NextResponse.json({ summary: response.text });
-//   } catch (err) {
-//     console.error("Doc summarize error:", err);
-//     return NextResponse.json(
-//       { error: "Failed to summarize document" },
-//       { status: 500 }
-//     );
-//   }
+// export async function POST() {
+//   return new Response("Not implemented", { status: 501 });
 // }

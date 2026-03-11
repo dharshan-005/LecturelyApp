@@ -26,7 +26,7 @@ import {
 import { signIn, signOut, useSession } from "next-auth/react";
 
 import { useRouter } from "next/navigation";
-// import Home from "../app/page.js";
+import logo from "../../public/assets/LA.png";
 
 interface NavbarProps {
   isDarkMode: boolean;
@@ -34,9 +34,6 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
-  // Tools dropdown
-  const [openTools, setOpenTools] = useState(false);
-
   // Language dropdown
   const [openLang, setOpenLang] = useState(false);
 
@@ -91,16 +88,26 @@ export const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
           : "relative p-4 md:p-6 max-w-7xl mx-auto w-[95%] md:w-full justify-between"
       }`}
     >
-      <a href="#" className="flex items-center gap-2">
+      <a href="/" className="flex items-center gap-2">
         {isSticky ? (
-          <div className="w-8 h-8 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-200 dark:shadow-none">
-            L
-          </div>
+          <img
+            src={logo.src}
+            alt="Lecturely Logo"
+            className="w-10 h-10 rounded-2xl"
+          />
         ) : (
+          // <div className="w-8 h-8 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-200 dark:shadow-none">
+          //   L
+          // </div>
           <>
-            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-200 dark:shadow-none">
+            {/* <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-200 dark:shadow-none">
               L
-            </div>
+            </div> */}
+            <img
+              src={logo.src}
+              alt="Lecturely Logo"
+              className="w-10 h-10 bg-black rounded-2xl"
+            />
             <span className="hidden md:flex font-bold text-2xl text-slate-800 dark:text-slate-100 tracking-tight">
               Lecturely.AI
             </span>
@@ -110,7 +117,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
 
       <div className="hidden md:flex gap-5 items-center text-slate-600 dark:text-slate-400 font-medium">
         <a
-          href="#"
+          href="/"
           className={`nav-item ${isActive === "home" ? "text-indigo-500" : "text-gray-400"}`}
         >
           {isSticky ? <Home className="w-6 h-6" /> : "Home"}
@@ -160,11 +167,12 @@ export const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
             Log in
           </a> */}
 
-          <Button className="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-5 py-2.5 rounded-xl font-bold  hidden md:inline transition shadow-lg">
+          <Button className="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-5 py-2.5 rounded-xl font-bold hidden md:inline transition shadow-lg">
             {isSticky ? <Rocket className="w-5 h-5" /> : "Get Started"}
           </Button>
         </div>
-        <DropdownMenu open={openLang} onOpenChange={setOpenLang}>
+
+        <DropdownMenu modal={false} open={openLang} onOpenChange={setOpenLang}>
           <DropdownMenuTrigger
             onMouseEnter={() => setOpenLang(true)}
             onMouseLeave={() => setOpenLang(false)}
@@ -198,7 +206,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
         {/* Not logged in → Show Login */}
         {!session && (
           <button
-            onClick={() => signIn("google")}
+            onClick={() => router.push("/login")}
             className="text-slate-600 dark:text-slate-300 font-medium hover:text-indigo-600 dark:hover:text-white transition hidden sm:block cursor-pointer"
           >
             {isSticky ? <LogIn className="w-5 h-5" /> : "Log in"}
@@ -300,7 +308,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
           {/* Auth */}
           {!session ? (
             <button
-              onClick={() => signIn("google")}
+              onClick={() => router.push("/login")}
               className="w-full bg-indigo-600 text-white py-2 rounded-xl font-semibold"
             >
               Log in

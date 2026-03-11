@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, use, useContext, useEffect, useLayoutEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from "react";
 
 type AppContextType = {
   file: File | null;
@@ -29,26 +35,27 @@ const AppContext = createContext<AppContextType | null>(null);
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [file, setFile] = useState<File | null>(null);
   const [subtitles, setSubtitles] = useState<any[]>([]);
-  const [targetLang, setTargetLang] = useState("Tamil");
+  const [targetLang, setTargetLang] = useState("ta");
 
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const toggleTheme = () => setIsDarkMode((p) => !p);
 
   const [transcriptText, setTranscriptText] = useState("");
 
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
-  useLayoutEffect(() => {   
-    console.log("restoring from local")
+  useLayoutEffect(() => {
+    // console.log("restoring from local")
     const storedVideoUrl = localStorage.getItem("videoUrl");
     const storedSubs = localStorage.getItem("subtitles");
+    const storedLang = localStorage.getItem("targetLang");
 
     if (storedVideoUrl) setVideoUrl(storedVideoUrl);
     if (storedSubs) setSubtitles(JSON.parse(storedSubs));
+    if (storedLang) setTargetLang(storedLang);
 
     setHydrated(true);
-    console.log("Hydration done")
+    // console.log("Hydration done")
   }, []);
 
   useEffect(() => {
@@ -62,6 +69,34 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem("subtitles", JSON.stringify(subtitles));
     }
   }, [subtitles]);
+
+  useEffect(() => {
+    localStorage.setItem("targetLang", targetLang);
+  }, [targetLang]);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme === "dark") {
+      setIsDarkMode(true);
+    }
+  }, []);
+
+  // Sync HTML class whenever theme changes
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDarkMode]);
+
+  // Toggle function (must be OUTSIDE useEffect)
+  const toggleTheme = () => {
+    const newTheme = !isDarkMode;
+    setIsDarkMode(newTheme);
+    localStorage.setItem("theme", newTheme ? "dark" : "light");
+  };
 
   return (
     <AppContext.Provider
@@ -78,7 +113,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         setTranscriptText,
         videoUrl,
         setVideoUrl,
-        hydrated
+        hydrated,
       }}
     >
       {children}

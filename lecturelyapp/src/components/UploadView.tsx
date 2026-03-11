@@ -1,23 +1,28 @@
 import React, { ChangeEvent, useState } from "react";
 import { Upload, FileVideo, Languages, ChevronRight } from "lucide-react";
 import { Navbar } from "./Navbar";
+import logo from "../../public/assets/LA.png";
 
 interface UploadViewProps {
   file: File | null;
+  videoUrl: string | null;
   targetLang: string;
   isDarkMode: boolean;
   toggleTheme: () => void;
   onFileUpload: (e: ChangeEvent<HTMLInputElement>) => void;
+  onUrlChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onLanguageChange: (e: ChangeEvent<HTMLSelectElement>) => void;
   onStart: () => void;
 }
 
 export const UploadView: React.FC<UploadViewProps> = ({
   file,
+  videoUrl,
   targetLang,
   isDarkMode,
   toggleTheme,
   onFileUpload,
+  onUrlChange,
   onLanguageChange,
   onStart,
 }) => {
@@ -41,6 +46,17 @@ export const UploadView: React.FC<UploadViewProps> = ({
 
         {/* Card */}
         <div className="bg-white dark:bg-slate-800/50 backdrop-blur-sm p-6 md:p-10 rounded-3xl shadow-xl dark:shadow-2xl border border-indigo-50 dark:border-slate-700 text-center transition-all duration-300 hover:shadow-2xl">
+          {/* Url Input */}
+          <div className="mb-1">
+            <input
+              type="text"
+              placeholder="Paste YouTube URL"
+              className="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              value={videoUrl && videoUrl.includes("youtube") ? videoUrl : ""}
+              onChange={onUrlChange}
+            />
+          </div>
+          <p className="mb-1">(or)</p>
           {/* Drop Zone */}
           <div className="border-2 border-dashed border-indigo-200 dark:border-slate-600 rounded-2xl p-7 md:p-10 flex flex-col items-center justify-center bg-indigo-50/30 dark:bg-slate-800/50 hover:bg-indigo-50 dark:hover:bg-slate-700 transition cursor-pointer relative group">
             <input
@@ -73,19 +89,19 @@ export const UploadView: React.FC<UploadViewProps> = ({
                 value={targetLang}
                 onChange={onLanguageChange}
               >
-                <option className="text-black " value="Japanese">
-                  Japanese
-                </option>
-                <option className="text-black" value="Hindi">
-                  Hindi
-                </option>
-                <option className="text-black" value="Tamil">
+                <option className="text-black" value="ta">
                   Tamil
                 </option>
-                <option className="text-black" value="Telugu">
+                <option className="text-black " value="ja">
+                  Japanese
+                </option>
+                <option className="text-black" value="hi">
+                  Hindi
+                </option>
+                <option className="text-black" value="te">
                   Telugu
                 </option>
-                <option className="text-black" value="German">
+                <option className="text-black" value="de">
                   German
                 </option>
               </select>
@@ -93,9 +109,9 @@ export const UploadView: React.FC<UploadViewProps> = ({
 
             <button
               onClick={onStart}
-              disabled={!file}
+              disabled={!file && !videoUrl}
               className={`flex items-center gap-2 px-4 md:px-8 py-1.5 md:py-3 rounded-xl font-bold text-sm md:text-lg transition shadow-lg transform active:scale-95 ${
-                file
+                file || videoUrl
                   ? "bg-indigo-600 dark:bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-indigo-500/30"
                   : "bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed"
               }`}

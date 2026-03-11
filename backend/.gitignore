@@ -1,2 +1,6 @@
 .env
 /whisper.cpp
+/uploads
+/output
+/outputs
+/temp

@@ -1,7 +1,7 @@
 export interface Subtitle {
   id: number;
-  start: string;
-  end: string;
+  start: number;
+  end: number;
   original: string;
   translated: string;
 }

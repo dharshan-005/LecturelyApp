@@ -3,11 +3,20 @@ Navbar scroll fixing - Done
 Login - Done
 Tools in home page - 
 Tools individual page - 
+Forgot password page -
 
 Summary component:
+  Frontend UI - 
   > Text Summary - Done
-  > Doc Summary - 
+  > Doc Summary - Done
   > Video Summary - 
+
+After meeting ideas: 23/02/2026
+  > Summary generation from video - 
+  > Download file formats (txt, docx, pdf) -
+  > Show meanings of the words in the transcript -
+  > Url input for summary generation - 
+  > Test other languages for summary and translation -
 
 If the user login:
   > Can save and see the history of thier summary process with the original and the summarized text - 

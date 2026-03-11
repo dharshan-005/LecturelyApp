@@ -126,7 +126,7 @@
 
 /* bg img */
 .bg-login {
-  background-image: url('/assets/Bg4.jpg');
+  background-image: url("/assets/Bg4.jpg");
   background-size: cover;
   background-position: center;
 }
@@ -241,4 +241,82 @@
   font-family: "Poppins", sans-serif;
   font-weight: 900;
   font-style: italic;
+}
+
+/* .background-pattern {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background-color: #0f172a;
+}
+
+.background-pattern::before {
+  content: "A あ ア 漢 한 अ ا א Α Ж ก க అ ಮ গ ก ᚠ Ω し 一 ㅣ ل ו";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  font-size: 120px;
+  line-height: 160px;
+  letter-spacing: 40px;
+  color: rgba(255, 255, 255, 0.04);
+  transform: rotate(-20deg);
+  animation: floatBg 20s linear infinite;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+@keyframes floatBg {
+  from {
+    transform: rotate(-20deg) translateY(0);
+  }
+  to {
+    transform: rotate(-20deg) translateY(-200px);
+  }
+} */
+
+.bg-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: #484b50; /* change if light theme */
+}
+
+.bg-row {
+  white-space: nowrap;
+  font-size: 80px;
+  letter-spacing: 40px;
+  opacity: 0.05;
+  font-weight: 600;
+  user-select: none;
+}
+
+/* Right movement */
+.move-right {
+  animation: moveRight 40s linear infinite;
+}
+
+/* Left movement */
+.move-left {
+  animation: moveLeft 40s linear infinite;
+}
+
+@keyframes moveRight {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes moveLeft {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }

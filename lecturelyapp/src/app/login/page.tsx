@@ -8,7 +8,7 @@ import { FaGoogle, FaEye, FaEyeSlash } from "react-icons/fa";
 import { Input } from "../../components/ui/input";
 import { useEffect, useState } from "react";
 
-import logo from "../../../public/assets/LecturelyAI-logo1-removebg-preview.png";
+import logo from "../../../public/assets/LA.png";
 
 export default function Login() {
   const { data: session, status } = useSession();
@@ -36,31 +36,58 @@ export default function Login() {
     return null;
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const storedEmail = localStorage.getItem("email");
-    const storedPassword = localStorage.getItem("password");
-    const storedUsername = localStorage.getItem("username");
+    setLocalError("");
 
-    if (email === storedEmail && password === storedPassword) {
-      localStorage.setItem("isLoggedIn", "true");
-      // Set profilePic here (use existing or default)
-      // if (!localStorage.getItem('profilePic')) {
-      //   localStorage.setItem('profilePic', defaultPicture);
-      // }
-      // Optionally store session user name
-      localStorage.setItem("activeUser", storedUsername || email);
-      router.push("/");
-    } else {
-      setLocalError("Incorrect email or password");
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
+
+      if (result?.error) {
+        setLocalError("Invalid email or password");
+      } else {
+        router.replace("/");
+      }
+    } catch (err) {
+      setLocalError("An error occurred. Please try again.");
     }
   };
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center min-h-screen bg-login">
+      <div className="relative flex flex-col justify-center items-center min-h-screen bg-wrapper">
+        <div className="absolute inset-0 -z-10 flex flex-col justify-center gap-10 select-none">
+          <div className="bg-row move-right text-white">
+            A あ ア 漢 한 अ ا א Α Ж ก க అ ಮ গ ᚠ Ω し 一 ㅣ ل ו A あ ア 漢 한 अ ا
+            א Α Ж ก க అ ಮ গ ᚠ Ω し 一 ㅣ ل ו
+          </div>
+
+          <div className="bg-row move-left text-white">
+            A あ ア 漢 한 अ ا א Α Ж ก க అ ಮ গ ᚠ Ω し 一 ㅣ ل ו A あ ア 漢 한 अ ا
+            א Α Ж ก க అ ಮ গ ᚠ Ω し 一 ㅣ ل ו
+          </div>
+
+          <div className="bg-row move-right text-white">
+            A あ ア 漢 한 अ ا א Α Ж ก க అ ಮ গ ᚠ Ω し 一 ㅣ ل ו A あ ア 漢 한 अ ا
+            א Α Ж ก க అ ಮ গ ᚠ Ω し 一 ㅣ ل ו
+          </div>
+
+          <div className="bg-row move-left text-white">
+            A あ ア 漢 한 अ ا א Α Ж ก க అ ಮ গ ᚠ Ω し 一 ㅣ ل ו A あ ア 漢 한 अ ا
+            א Α Ж ก க అ ಮ গ ᚠ Ω し 一 ㅣ ل ו
+          </div>
+
+          <div className="bg-row move-right text-white">
+            A あ ア 漢 한 अ ا א Α Ж ก க అ ಮ গ ᚠ Ω し 一 ㅣ ل ו A あ ア 漢 한 अ ا
+            א Α Ж ก க అ ಮ গ ᚠ Ω し 一 ㅣ ل ו
+          </div>
+        </div>
         <div className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm p-12 rounded-3xl shadow-xl dark:shadow-2xl border border-indigo-50 dark:border-slate-700 text-center transition-all duration-300 hover:shadow-2xl flex flex-col gap-4 w-full max-w-md">
-        {/* <div className="bg-[linear-gradient(106.91deg,rgba(255,255,255,0.1)_3.73%,rgba(255,255,255,0.02)_97.95%)] shadow-[3px_4px_8px_rgba(0,0,0,0.25)] backdrop-blur-[7.5px] rounded-[25px] flex flex-col gap-4 w-full max-w-md p-12 text-center"> */}
+          {/* <div className="bg-[linear-gradient(106.91deg,rgba(255,255,255,0.1)_3.73%,rgba(255,255,255,0.02)_97.95%)] shadow-[3px_4px_8px_rgba(0,0,0,0.25)] backdrop-blur-[7.5px] rounded-[25px] flex flex-col gap-4 w-full max-w-md p-12 text-center"> */}
           <div>
             <img
               src={logo.src}
@@ -68,7 +95,7 @@ export default function Login() {
               className="w-25 h-25 mx-auto rounded-2xl"
             />
           </div>
-          <h1 className="font-bold text-2xl">Welcome to Lecturely.Ai</h1>
+          <h1 className="font-bold text-2xl">Welcome to Lecturely.AI</h1>
           <h2 className="font-semibold text-[22px]">Login</h2>
           {/* <h3>Login with Google</h3> */}
           <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
@@ -117,7 +144,7 @@ export default function Login() {
 
           <button
             onClick={() => {
-              signIn("google");
+              signIn("google", { callbackUrl: "/" });
             }}
             className="bg-white text-black px-4 py-2 rounded hover:bg-gray-200 cursor-pointer flex justify-center items-center gap-2 border border-gray-300"
           >
