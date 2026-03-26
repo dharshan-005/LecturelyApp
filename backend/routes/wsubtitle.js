@@ -116,18 +116,10 @@ router.post("/generate-subtitle", upload.single("video"), async (req, res) => {
           Return ONLY a JSON array of translated sentences in the same order.
           ${JSON.stringify(textArray)}`;
 
-          // const response = await ai.models.generateContent({
-          //   model: "gemini-2.5-flash",
-          //   contents: prompt,
-          // });
           const raw = await callGemini(prompt);
 
-          // const translated = JSON.parse(response.text);
-          // let text = response.text.trim();
           let text = raw.trim();
 
-          // remove ```json ``` wrappers if present
-          // if (text.startsWith("```")) {
           text = text
             .replace(/```json/g, "")
             .replace(/```/g, "")

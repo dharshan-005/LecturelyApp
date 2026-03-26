@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState } from "react";
 import { Upload, FileVideo, Languages, ChevronRight } from "lucide-react";
-import { Navbar } from "./Navbar";
+import { Sidebar } from "./Sidebar";
 import logo from "../../public/assets/LA.png";
 
 interface UploadViewProps {
@@ -12,7 +12,8 @@ interface UploadViewProps {
   onFileUpload: (e: ChangeEvent<HTMLInputElement>) => void;
   onUrlChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onLanguageChange: (e: ChangeEvent<HTMLSelectElement>) => void;
-  onStart: () => void;
+  onStart: () => void; 
+  isReady: boolean;
 }
 
 export const UploadView: React.FC<UploadViewProps> = ({
@@ -25,17 +26,16 @@ export const UploadView: React.FC<UploadViewProps> = ({
   onUrlChange,
   onLanguageChange,
   onStart,
+  isReady,
 }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   return (
-    <div className="min-h-screen">
+    <div id="home" className="min-h-screen md:ml-64">
       <main className="max-w-4xl mx-auto p-6 animate-fade-in">
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight text-slate-900 dark:text-white transition-colors">
-            Go Global with{" "}
+            Understand Anything,{" "}
             <span className="text-indigo-600 dark:text-indigo-400">
-              One Click.
+              Instantly.
             </span>
           </h2>
           <p className="text-sm md:text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto transition-colors">
@@ -109,7 +109,7 @@ export const UploadView: React.FC<UploadViewProps> = ({
 
             <button
               onClick={onStart}
-              disabled={!file && !videoUrl}
+              disabled={(!file && !videoUrl) || !isReady}
               className={`flex items-center gap-2 px-4 md:px-8 py-1.5 md:py-3 rounded-xl font-bold text-sm md:text-lg transition shadow-lg transform active:scale-95 ${
                 file || videoUrl
                   ? "bg-indigo-600 dark:bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-indigo-500/30"

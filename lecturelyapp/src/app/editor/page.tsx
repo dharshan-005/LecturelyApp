@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { EditorView } from "../../components/EditorView";
 import { useApp } from "../../context/AppContext";
 import { useRouter } from "next/navigation";
-import Chatbot from "@/components/chat/Chatbot";
+// import Chatbot from "@/components/chat/Chatbot";
 
 export default function EditorPage() {
   const {
@@ -148,7 +148,7 @@ export default function EditorPage() {
         summary={summary}
         loadingSummary={loadingSummary}
       />
-      <Chatbot context={transcript} />
+      {/* <Chatbot context={transcript} /> */}
     </>
   );
 }

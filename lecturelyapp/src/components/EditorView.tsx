@@ -47,21 +47,12 @@ export const EditorView: React.FC<EditorViewProps> = ({
   loadingSummary,
   videoSrc,
 }) => {
-  const [isSticky, setIsSticky] = useState(false);
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsSticky(window.scrollY > 75);
-    };
-    window.addEventListener("scroll", handleScroll);
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   const { data: session } = useSession();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const router = useRouter();
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // const [isSticky, setIsSticky] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const [currentTime, setCurrentTime] = useState(0);
@@ -90,7 +81,7 @@ export const EditorView: React.FC<EditorViewProps> = ({
       <div>
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col transition-colors duration-300">
           {/* Editor Navbar */}
-          <nav
+          {/* <nav
             className={`flex justify-between items-center p-4 md:p-6 max-w-7xl mx-auto g-4 w-87 md:w-full border-b border-transparent md:border-none z-50 transition-all duration-300 ${
               isSticky
                 ? "fixed top-5 left-3.5 right-3.5 md:left-5 md:right-5 rounded-4xl p-2 bg-white dark:bg-black shadow-lg"
@@ -147,11 +138,83 @@ export const EditorView: React.FC<EditorViewProps> = ({
                 <p className="text-[14px] hidden md:inline">Export SRT</p>
               </button>
             </div>
-          </nav>
+          </nav> */}
           {/* End of navBar */}
 
+          {/* Sidebar start */}
+          {/* Desktop Sidebar */}
+          <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-white dark:bg-black border-r border-slate-200 dark:border-slate-800 p-6 flex-col justify-between z-50">
+            {/* Logo */}
+            <div>
+              <div className="flex items-center gap-2 mb-10">
+                <img src={logo.src} className="w-10 h-10 rounded-xl" />
+                <span className="font-bold text-xl">Lecturely.AI</span>
+              </div>
+              <span className="bg-green-100 w-10 md:w-18 dark:bg-indigo-500/10 text-green-700 dark:text-indigo-400 text-[8px] px-2 py-0.5 md:text-[10px] rounded-full font-medium ml-2 border dark:border-indigo-500/20">
+                Editor Mode
+              </span>
+            </div>
+
+            <div className="hidden md:flex gap-8 text-slate-600 dark:text-slate-400 font-medium">
+              <a
+                href="/"
+                className="hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+              >
+                Home
+              </a>
+            </div>
+
+            <button
+              onClick={onNewProject}
+              className="text-[10px] md:text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
+            >
+              New Project
+            </button>
+            {/* <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div> 
+            <button
+              onClick={onDownload}
+              className="flex items-center gap-2 bg-indigo-600 text-white px-2 py-1 md:px-4 md:py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition"
+            >
+              <Download className="w-4 h-4" />{" "}
+              <p className="text-[14px] hidden md:inline">Export SRT</p>
+            </button>
+
+            {/* Bottom Section */}
+            <div className="flex flex-col gap-4">
+              {/* Theme */}
+              <button onClick={toggleTheme} className="flex items-center gap-2">
+                {isDarkMode ? <Moon /> : <Sun />}
+                Theme
+              </button>
+            </div>
+          </aside>
+
+          {/* Mobile Toggle Button */}
+          <button
+            onClick={() => setMobileOpen(true)}
+            className="md:hidden fixed top-4 left-4 z-50"
+          >
+            <Menu />
+          </button>
+
+          {/* Mobile Drawer */}
+          {mobileOpen && (
+            <div className="fixed inset-0 bg-black/50 z-50">
+              <div className="w-64 h-full bg-white dark:bg-black p-6">
+                <button onClick={() => setMobileOpen(false)} className="mb-6">
+                  <X />
+                </button>
+
+                <nav className="flex flex-col gap-5">
+                  <a href="#home">Home</a>
+                </nav>
+              </div>
+            </div>
+          )}
+          {/* Sidebar end */}
+
           {/* Main Workspace */}
-          <div className={isSticky ? "mt-24" : ""}>
+          <div className="md:ml-64 md:p-5">
             <main className="flex flex-col md:flex-row w-full md:h-[calc(100vh-100px)] overflow-hidden">
               {/* Left: Video Preview */}
               <div className="md:w-1/2 flex flex-col items-center justify-center relative">

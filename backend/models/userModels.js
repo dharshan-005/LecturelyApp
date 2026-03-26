@@ -1,34 +1,62 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
-  userName: {
-    type: String,
-    required: [true, "Please provide a username."],
-    unique: true,
-  },
-  email: {
-    type: String,
-    required: [true, "Please provide an email."],
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: [true, "Please provide a password."],
-  },
-  isVerified: {
-    type: Boolean,
-    default: false,
-  },
-  isAdmin: {
-    type: Boolean,
-    default: false,
-  },
-  forgotPasswordToken: String,
-  forgotPasswordTokenExpiry: Date,
-  verifyToken: String,
-  verifyTokenExpiry: Date,
-});
+const userSchema = new mongoose.Schema(
+  {
+    email: { type: String, required: true, unique: true },
+    userName: String,
+    image: String,
 
-const User = mongoose.models.users || mongoose.model("users", userSchema);
+    password: {
+      type: String,
+      required: function () {
+        return this.oauth === false; // required only if NOT Google user
+      },
+    },
+    oauth: {
+      type: Boolean,
+      default: false,
+    },
 
-export default User;
+    stats: {
+      subtitlesGenerated: {
+        type: Number,
+        default: 0,
+      },
+      translationsDone: {
+        type: Number,
+        default: 0,
+      },
+      minutesProcessed: {
+        type: Number,
+        default: 0,
+      },
+      languagesUsed: {
+        type: Number,
+        default: 0,
+      },
+      creditsRemaining: {
+        type: Number,
+        default: 10,
+      },
+      totalCredits: {
+        type: Number,
+        default: 10,
+      },
+    },
+
+    recentLectures: [
+      {
+        _id: false,
+        lectureId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Lecture",
+        },
+        title: String,
+        createdAt: { type: Date },
+      },
+    ],
+  },
+  { timestamps: true },
+);
+
+export default mongoose.model("User", userSchema);

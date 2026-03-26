@@ -104,7 +104,7 @@ export default function SummaryNew() {
 
   return (
     <>
-      <div id="summary" className="w-full h-screen p-4">
+      <div id="summary" className="w-auto h-screen p-4 md:ml-64">
         <div className="flex justify-center">
           <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
             Summary

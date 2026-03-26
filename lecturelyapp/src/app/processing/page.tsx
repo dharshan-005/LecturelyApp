@@ -5,6 +5,7 @@ import { ProcessingView } from "../../components/ProcessingView";
 import { useApp } from "../../context/AppContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import { parseSRT } from "../../utils/parseSRT";
+import { useSession } from "next-auth/react";
 
 export default function ProcessingPage() {
   const { file, videoUrl, setSubtitles, setVideoUrl } = useApp();
@@ -17,8 +18,8 @@ export default function ProcessingPage() {
     typeof window !== "undefined" ? localStorage.getItem("targetLang") : null;
 
   const targetLang = storedLang || searchParams?.get("lang") || "ta";
-  // const targetLang = searchParams?.get("lang") || "ta";
-  // const targetLang = langFromUrl ?? "ta";
+
+  const { data: session } = useSession();
 
   const hasRun = useRef(false);
 
@@ -118,6 +119,40 @@ export default function ProcessingPage() {
             throw new Error("Unknown URL subtitle format");
           });
         }
+
+        console.log("Creating lecture in DB...");
+        const storedDuration = localStorage.getItem("videoDuration");
+        console.log("Stored Duration:", storedDuration);
+
+        console.log("EMAIL SENT:", localStorage.getItem("email"));
+        console.log(
+          "FULL AUTH HEADER:",
+          `Bearer ${localStorage.getItem("email")}`,
+        );
+
+        const lectureRes = await fetch("http://localhost:5000/api/lectures", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user?.email}`,
+          },
+          body: JSON.stringify({
+            title: file?.name || videoUrl || "Untitled Lecture",
+            duration: storedDuration ? Number(storedDuration) : 0,
+          }),
+        });
+
+        const lectureData = await lectureRes.json();
+
+        console.log("EMAIL FROM SESSION:", session?.user?.email);
+        console.log("Lecture response:", lectureData);
+
+        if (!lectureRes.ok) {
+          throw new Error(lectureData.message || "Lecture creation failed");
+        }
+
+        // store lectureId for later use
+        localStorage.setItem("lectureId", lectureData.lecture._id);
 
         setSubtitles([]);
         setStage("Processing video with AI...");

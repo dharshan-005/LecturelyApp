@@ -1,11 +1,6 @@
-import NextAuth from "next-auth/next";
+import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-
-import User from "@/models/userModel.js";
-import { connectToDB } from "@/utils/database";
-
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcrypt";
 
 const handler = NextAuth({
   providers: [
@@ -21,21 +16,23 @@ const handler = NextAuth({
         password: {},
       },
       async authorize(credentials) {
-        await connectToDB();
+        const res = await fetch("http://localhost:5000/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(credentials),
+        });
 
-        const user = await User.findOne({ email: credentials.email });
-
-        if (!user || !user.password) {
-          throw new Error("No user found with this email");
+        let user;
+        try {
+          user = await res.json();
+        } catch {
+          throw new Error("Invalid server response");
         }
 
-        const isValid = await bcrypt.compare(
-          credentials.password,
-          user.password,
-        );
-
-        if (!isValid) {
-          throw new Error("Invalid password");
+        if (!res.ok) {
+          throw new Error(user.message || "Login failed");
         }
 
         return user;
@@ -44,26 +41,26 @@ const handler = NextAuth({
   ],
 
   callbacks: {
-    async session({ session }) {
-      return session;
-    },
-    async signIn({ account, profile, user, credentials }) {
-      try {
-        await connectToDB();
-        const existingUser = await User.findOne({ email: user.email });
-
-        if (!existingUser) {
-          await User.create({
-            name: user.name,
-            email: user.email,
-            image: user.image,
-          });
-        }
-        return true;
-      } catch (error) {
-        console.log("Error checking user in DB: ", error);
-        return false;
+    async jwt({ token, user, account }) {
+      if (user) {
+        token.email = user.email;
+        token.name = user.userName || user.name || token.name;
+        token.picture = user.image || user.picture || token.picture;
       }
+
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.email = token.email;
+        session.user.name = token.name;
+        session.user.image = token.picture;
+      }
+
+      session.accessToken = token.email;
+
+      return session;
     },
   },
 });

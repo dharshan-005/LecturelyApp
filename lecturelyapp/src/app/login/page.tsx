@@ -86,6 +86,7 @@ export default function Login() {
             א Α Ж ก க అ ಮ গ ᚠ Ω し 一 ㅣ ل ו
           </div>
         </div>
+        
         <div className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm p-12 rounded-3xl shadow-xl dark:shadow-2xl border border-indigo-50 dark:border-slate-700 text-center transition-all duration-300 hover:shadow-2xl flex flex-col gap-4 w-full max-w-md">
           {/* <div className="bg-[linear-gradient(106.91deg,rgba(255,255,255,0.1)_3.73%,rgba(255,255,255,0.02)_97.95%)] shadow-[3px_4px_8px_rgba(0,0,0,0.25)] backdrop-blur-[7.5px] rounded-[25px] flex flex-col gap-4 w-full max-w-md p-12 text-center"> */}
           <div>

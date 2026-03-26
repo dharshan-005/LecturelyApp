@@ -4,6 +4,7 @@ import AuthProvider from "../components/authProvider.js";
 // import { Session } from "next-auth";
 import "./globals.css";
 import { AppProvider } from "../context/AppContext";
+import SyncUser from "../components/SyncUser";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,6 +45,7 @@ export default function RootLayout({
       </head>
       <body className={` antialiased poppins-medium`}>
         <AuthProvider>
+          <SyncUser />
           <AppProvider>{children}</AppProvider>
         </AuthProvider>
       </body>

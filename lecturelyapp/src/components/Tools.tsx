@@ -7,7 +7,7 @@ const Tools = () => {
 
   return (
     <>
-      <main id="tools" className="w-full h-screen pt-8">
+      <main id="tools" className="w-auto h-screen pt-8 md:ml-64">
         <div className="h-full">
           <h1 className="text-3xl font-bold text-center dark:text-slate-200">
             Explore Our Tools
