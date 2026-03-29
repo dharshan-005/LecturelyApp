@@ -10,7 +10,8 @@ export default function UploadPage() {
     useApp();
   const router = useRouter();
 
-  const [isReady, setIsReady] = useState(false);
+  // const [isReady, setIsReady] = useState(false);
+  const [title, setTitle] = useState("");
 
   // const [selectedLang, setSelectedLang] = useState(targetLang);
   console.log("Current targetLang:", targetLang);
@@ -37,13 +38,15 @@ export default function UploadPage() {
       videoUrl={videoUrl}
       targetLang={targetLang}
       isDarkMode={false}
-      isReady={isReady}
+      // isReady={isReady}
       toggleTheme={() => {}}
+      title={title}
+      setTitle={setTitle}
       onFileUpload={async (e) => {
         const selectedFile = e.target.files?.[0];
         if (!selectedFile) return;
 
-        setIsReady(false)
+        // setIsReady(false);
 
         setFile(selectedFile);
 
@@ -57,22 +60,32 @@ export default function UploadPage() {
 
           // ✅ SAVE HERE
           localStorage.setItem("videoDuration", duration.toString());
+          // setIsReady(true);
         } catch (err) {
           console.error("Duration error:", err);
         }
       }}
-      onUrlChange={(e) => setVideoUrl(e.target.value)}
+      onUrlChange={(e) => {
+        const url = e.target.value;
+        setVideoUrl(url);
+        // setIsReady(!!url.trim());
+      }}
       onLanguageChange={(e) => {
         const lang = e.target.value;
         console.log("Selected:", lang);
         setTargetLang(lang);
       }}
       onStart={() => {
+        if (file) {
+          localStorage.setItem("inputType", "file");
+        } else if (videoUrl) {
+          localStorage.setItem("inputType", "url");
+          localStorage.setItem("videoUrl", videoUrl);
+        }
         console.log("Sending:", targetLang);
         localStorage.setItem("targetLang", targetLang);
         router.push("/processing");
       }}
-      
     />
   );
 }

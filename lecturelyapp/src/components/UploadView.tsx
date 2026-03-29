@@ -2,6 +2,7 @@ import React, { ChangeEvent, useState } from "react";
 import { Upload, FileVideo, Languages, ChevronRight } from "lucide-react";
 import { Sidebar } from "./Sidebar";
 import logo from "../../public/assets/LA.png";
+import { useSession } from "next-auth/react";
 
 interface UploadViewProps {
   file: File | null;
@@ -12,8 +13,10 @@ interface UploadViewProps {
   onFileUpload: (e: ChangeEvent<HTMLInputElement>) => void;
   onUrlChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onLanguageChange: (e: ChangeEvent<HTMLSelectElement>) => void;
-  onStart: () => void; 
-  isReady: boolean;
+  onStart: () => void;
+  // isReady: boolean;
+  title: string;
+  setTitle: (value: string) => void;
 }
 
 export const UploadView: React.FC<UploadViewProps> = ({
@@ -26,8 +29,15 @@ export const UploadView: React.FC<UploadViewProps> = ({
   onUrlChange,
   onLanguageChange,
   onStart,
-  isReady,
+  // isReady,
+  title,
+  setTitle,
 }) => {
+  const { status } = useSession();
+
+  console.log("file:", file);
+  console.log("videoUrl:", videoUrl);
+  // console.log("isReady:", isReady);
   return (
     <div id="home" className="min-h-screen md:ml-64">
       <main className="max-w-4xl mx-auto p-6 animate-fade-in">
@@ -45,18 +55,40 @@ export const UploadView: React.FC<UploadViewProps> = ({
         </div>
 
         {/* Card */}
-        <div className="bg-white dark:bg-slate-800/50 backdrop-blur-sm p-6 md:p-10 rounded-3xl shadow-xl dark:shadow-2xl border border-indigo-50 dark:border-slate-700 text-center transition-all duration-300 hover:shadow-2xl">
+        <div className="bg-white dark:bg-slate-800/50 backdrop-blur-sm p-6 md:px-10 rounded-3xl shadow-xl dark:shadow-2xl border border-indigo-50 dark:border-slate-700 text-center transition-all duration-300 hover:shadow-2xl">
+          {/* Title */}
+          <div className="md:flex md:w-full items-center md:gap-4 my-4">
+            <input
+              type="text"
+              placeholder={
+                status === "authenticated"
+                  ? "Enter lecture title *"
+                  : "Enter lecture title (optional)"
+              }
+              className="w-full md:w-96 p-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required={status === "authenticated"}
+            />
+
+            <p className="text-sm text-gray-500">
+              Required to save and identify your lecture later.
+            </p>
+          </div>
+
           {/* Url Input */}
           <div className="mb-1">
             <input
               type="text"
               placeholder="Paste YouTube URL"
               className="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              value={videoUrl && videoUrl.includes("youtube") ? videoUrl : ""}
+              // value={videoUrl && videoUrl.includes("youtube") ? videoUrl : ""}
+              value={videoUrl?.startsWith("https") ? videoUrl : ""}
               onChange={onUrlChange}
             />
           </div>
           <p className="mb-1">(or)</p>
+
           {/* Drop Zone */}
           <div className="border-2 border-dashed border-indigo-200 dark:border-slate-600 rounded-2xl p-7 md:p-10 flex flex-col items-center justify-center bg-indigo-50/30 dark:bg-slate-800/50 hover:bg-indigo-50 dark:hover:bg-slate-700 transition cursor-pointer relative group">
             <input
@@ -109,7 +141,7 @@ export const UploadView: React.FC<UploadViewProps> = ({
 
             <button
               onClick={onStart}
-              disabled={(!file && !videoUrl) || !isReady}
+              disabled={!file && !videoUrl?.trim()}
               className={`flex items-center gap-2 px-4 md:px-8 py-1.5 md:py-3 rounded-xl font-bold text-sm md:text-lg transition shadow-lg transform active:scale-95 ${
                 file || videoUrl
                   ? "bg-indigo-600 dark:bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-indigo-500/30"

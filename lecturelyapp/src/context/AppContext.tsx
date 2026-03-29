@@ -28,6 +28,9 @@ type AppContextType = {
   setVideoUrl: (url: string | null) => void;
 
   hydrated: boolean;
+
+  isFromBackend: boolean;
+  setIsFromBackend: (v: boolean) => void;
 };
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -44,19 +47,21 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
+  const [isFromBackend, setIsFromBackend] = useState(false);
+
   useLayoutEffect(() => {
-    // console.log("restoring from local")
+    if (isFromBackend) return; // 🚨 STOP override
+
     const storedVideoUrl = localStorage.getItem("videoUrl");
-    const storedSubs = localStorage.getItem("subtitles");
+    // const storedSubs = localStorage.getItem("subtitles");
     const storedLang = localStorage.getItem("targetLang");
 
     if (storedVideoUrl) setVideoUrl(storedVideoUrl);
-    if (storedSubs) setSubtitles(JSON.parse(storedSubs));
+    // if (storedSubs) setSubtitles(JSON.parse(storedSubs));
     if (storedLang) setTargetLang(storedLang);
 
     setHydrated(true);
-    // console.log("Hydration done")
-  }, []);
+  }, [isFromBackend]);
 
   useEffect(() => {
     if (videoUrl) {
@@ -64,11 +69,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   }, [videoUrl]);
 
-  useEffect(() => {
-    if (subtitles.length) {
-      localStorage.setItem("subtitles", JSON.stringify(subtitles));
-    }
-  }, [subtitles]);
+  // useEffect(() => {
+  //   if (isFromBackend) return; // 🚨 don't overwrite backend data
+
+  //   if (subtitles.length) {
+  //     localStorage.setItem("subtitles", JSON.stringify(subtitles));
+  //   }
+  // }, [subtitles, isFromBackend]);
 
   useEffect(() => {
     localStorage.setItem("targetLang", targetLang);
@@ -114,6 +121,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         videoUrl,
         setVideoUrl,
         hydrated,
+        isFromBackend,
+        setIsFromBackend,
       }}
     >
       {children}

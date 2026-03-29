@@ -5,6 +5,7 @@ import AuthProvider from "../components/authProvider.js";
 import "./globals.css";
 import { AppProvider } from "../context/AppContext";
 import SyncUser from "../components/SyncUser";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,10 +45,12 @@ export default function RootLayout({
         />
       </head>
       <body className={` antialiased poppins-medium`}>
-        <AuthProvider>
-          <SyncUser />
-          <AppProvider>{children}</AppProvider>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <SyncUser />
+            <AppProvider>{children}</AppProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

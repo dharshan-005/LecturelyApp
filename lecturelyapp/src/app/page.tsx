@@ -15,7 +15,7 @@ import Tools from "@/components/Tools";
 
 export default function LecturelyApp() {
   const { file, setFile, transcriptText, videoUrl, setVideoUrl } = useApp();
-  const [isReady, setIsReady] = useState(false);
+  // const [isReady, setIsReady] = useState(false);
 
   // --- Theme State ---
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
@@ -43,7 +43,7 @@ export default function LecturelyApp() {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
 
-    setIsReady(false); // ⛔ disable start
+    // setIsReady(false); // ⛔ disable start
 
     setFile(selectedFile);
 
@@ -57,7 +57,7 @@ export default function LecturelyApp() {
 
       localStorage.setItem("videoDuration", duration.toString());
 
-      setIsReady(true); // ✅ enable start
+      // setIsReady(true); // ✅ enable start
     } catch (err) {
       console.error("Duration error:", err);
     }
@@ -100,10 +100,10 @@ export default function LecturelyApp() {
       return;
     }
 
-    if (!isReady) {
-      alert("Please wait, processing video metadata...");
-      return;
-    }
+    // if (!isReady) {
+    //   alert("Please wait, processing video metadata...");
+    //   return;
+    // }
 
     router.push("/processing");
   };
@@ -127,7 +127,7 @@ export default function LecturelyApp() {
             onUrlChange={handleUrlChange}
             onLanguageChange={handleLanguageChange}
             onStart={startProcessing}
-            isReady={isReady}
+            // isReady={isReady}
           />
 
           {/* Tools */}

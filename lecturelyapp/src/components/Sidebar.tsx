@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   ChevronDown,
   Moon,
@@ -14,6 +14,7 @@ import {
   ToolCase,
   Rocket,
   LogIn,
+  HistoryIcon,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import {
@@ -29,13 +30,11 @@ import { BsArrowLeftShort, BsPerson } from "react-icons/bs";
 
 import { useRouter } from "next/navigation";
 import logo from "../../public/assets/LA.png";
+import { useTheme } from "@/context/ThemeContext";
 
-interface NavbarProps {
-  isDarkMode: boolean;
-  toggleTheme: () => void;
-}
+export const Sidebar = () => {
+  const { isDarkMode, toggleTheme } = useTheme();
 
-export const Sidebar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
   const [isActive, setIsActive] = useState("home");
   const [openLang, setOpenLang] = useState(false);
   const [open, setOpen] = useState(true);
@@ -76,54 +75,72 @@ export const Sidebar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
         className={`hidden md:flex fixed left-0 top-0 h-screen ${open ? "w-64" : "w-24"} bg-white dark:bg-black border-r border-slate-200 dark:border-slate-800 p-6 flex-col justify-between z-50`}
       >
         <div className="flex flex-col h-full justify-between">
-          <BsArrowLeftShort
+          {/* <BsArrowLeftShort
             className={`bg-white text-black text-3xl rounded-full absolute -right-3 top-9 border border-[#081A51] cursor-pointer ${!open && "rotate-180"}`}
             onClick={() => setOpen(!open)}
-          />
+          /> */}
           {/* Logo */}
-          <div>
-            <div className="flex items-center gap-2 mb-6">
-              <img src={logo.src} className="w-10 h-10 rounded-xl" />
-              {open && <span className="font-bold text-xl">Lecturely.AI</span>}
+          <div className="flex flex-col gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-6">
+                <img src={logo.src} className="w-10 h-10 rounded-xl" />
+                {open && (
+                  <span className="font-bold text-xl">Lecturely.AI</span>
+                )}
+              </div>
+
+              {/* Nav Links */}
+              <div className="mt-4">
+                <nav className={`flex flex-col gap-4 rounded-md`}>
+                  {[
+                    { id: "home", label: "Home", icon: Home },
+                    { id: "tools", label: "Tools", icon: ToolCase },
+                    { id: "summary", label: "Summary", icon: FileText },
+                    { id: "contact", label: "Contact", icon: Contact },
+                  ].map(({ id, label, icon: Icon }) => (
+                    <div key={id} className="relative group">
+                      <a
+                        key={id}
+                        href={`#${id}`}
+                        className={`flex items-center hover:text-indigo-500 ${
+                          open ? "justify-start gap-3" : "justify-center"
+                        } ${
+                          isActive === id
+                            ? "text-indigo-500"
+                            : "text-black dark:text-white"
+                        }`}
+                      >
+                        <Icon
+                          className={` ${open ? "w-5 h-5" : ""} text-current`}
+                        />
+                        {open && <span>{label}</span>}
+                      </a>
+                      {!open && (
+                        <span className="absolute left-14 top-1/2 -translate-y-1/2 whitespace-nowrap bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">
+                          {label}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </nav>
+              </div>
             </div>
 
-            {/* Nav Links */}
-            <div className="mt-4">
-              <nav className={`flex flex-col gap-4 rounded-md`}>
-                {[
-                  { id: "home", label: "Home", icon: Home },
-                  { id: "tools", label: "Tools", icon: ToolCase },
-                  { id: "summary", label: "Summary", icon: FileText },
-                  { id: "contact", label: "Contact", icon: Contact },
-                ].map(({ id, label, icon: Icon }) => (
-                  <div key={id} className="relative group">
-                    <a
-                      key={id}
-                      href={`#${id}`}
-                      className={`flex items-center hover:text-indigo-500 ${
-                        open ? "justify-start gap-3" : "justify-center"
-                      } ${
-                        isActive === id ? "text-indigo-500" : "text-slate-500"
-                      }`}
-                    >
-                      <Icon
-                        className={` ${open ? "w-5 h-5" : ""} text-current`}
-                      />
-                      {open && <span>{label}</span>}
-                    </a>
-                    {!open && (
-                      <span className="absolute left-14 top-1/2 -translate-y-1/2 whitespace-nowrap bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">
-                        {label}
-                      </span>
-                    )}
-                  </div>
-                ))}
-              </nav>
-            </div>
-          </div>
+            <div className="h-px w-auto bg-black dark:bg-slate-700 mx-2"></div>
 
-          <div>
-            <a href="">History</a>
+            <div>
+              <a
+                href="/history"
+                className={`flex items-center hover:text-indigo-500 ${
+                  open ? "justify-start gap-3" : "justify-center"
+                }`}
+              >
+                <HistoryIcon
+                  className={` ${open ? "w-5 h-5" : ""} text-current`}
+                />
+                {open && <span>History</span>}
+              </a>
+            </div>
           </div>
 
           {/* Bottom Section */}
@@ -131,7 +148,7 @@ export const Sidebar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
             {/* Theme */}
             <button
               onClick={toggleTheme}
-              className={`flex items-center ${
+              className={`flex items-center cursor-pointer ${
                 open ? "gap-2" : "justify-center"
               }`}
             >
@@ -142,7 +159,7 @@ export const Sidebar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
             {/* Language */}
             <DropdownMenu open={openLang} onOpenChange={setOpenLang}>
               <DropdownMenuTrigger
-                className={`flex items-center ${
+                className={`flex items-center cursor-pointer ${
                   open ? "gap-2" : "justify-center"
                 }`}
               >
@@ -162,7 +179,7 @@ export const Sidebar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
             {!session ? (
               <Button
                 onClick={() => router.push("/login")}
-                className={`${!open && "px-2"}`}
+                className={`${!open && "px-2"} cursor-pointer`}
               >
                 {open ? "Log in" : <LogIn />}
               </Button>
@@ -170,7 +187,7 @@ export const Sidebar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
               <>
                 <Button
                   onClick={() => router.push("/profile")}
-                  className={`${!open && "px-2"}`}
+                  className={`${!open && "px-2"} cursor-pointer`}
                 >
                   <BsPerson />
                   {open && "Profile"}
@@ -182,7 +199,7 @@ export const Sidebar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
       </aside>
 
       {/* Mobile Toggle Button */}
-      <div className="p-5">
+      <div className="p-5 md:p-2">
         <button
           onClick={() => setMobileOpen(true)}
           className="md:hidden fixed top-4 left-4 z-50"
@@ -198,6 +215,7 @@ export const Sidebar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
           { id: "tools", icon: ToolCase },
           { id: "summary", icon: FileText },
           { id: "contact", icon: Contact },
+          { id: "profile", icon: BsPerson },
         ].map(({ id, icon: Icon }) => (
           <a
             key={id}

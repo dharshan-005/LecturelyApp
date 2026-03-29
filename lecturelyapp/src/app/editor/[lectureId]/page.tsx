@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { EditorView } from "../../components/EditorView";
-import { useApp } from "../../context/AppContext";
-import { useRouter } from "next/navigation";
+import { EditorView } from "../../../components/EditorView";
+import { useApp } from "../../../context/AppContext";
+import { useParams, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 // import Chatbot from "@/components/chat/Chatbot";
 
 export default function EditorPage() {
@@ -16,6 +17,7 @@ export default function EditorPage() {
     videoUrl,
     setVideoUrl,
     hydrated,
+    setIsFromBackend,
   } = useApp();
 
   console.log("Editor subtitles:", subtitles);
@@ -24,6 +26,20 @@ export default function EditorPage() {
 
   const [summary, setSummary] = useState("");
   const [loadingSummary, setLoadingSummary] = useState(false);
+
+  const params = useParams();
+
+  const lectureId =
+    typeof params?.lectureId === "string"
+      ? params.lectureId
+      : Array.isArray(params?.lectureId)
+        ? params.lectureId[0]
+        : null;
+  console.log("LECTURE ID:", lectureId);
+
+  const { data: session } = useSession();
+
+  const hasLoadedLecture = useRef(false);
 
   console.log({ hydrated, videoUrl, subtitlesLength: subtitles.length });
   console.log("VIDEO URL:", videoUrl);
@@ -63,18 +79,19 @@ export default function EditorPage() {
   };
 
   useEffect(() => {
+    if (hasLoadedLecture.current) return; // 🚨 BLOCK override
+
     if (!videoUrl) {
       const savedVideo = localStorage.getItem("lecturely_video");
 
       if (!videoUrl && savedVideo) {
         setVideoUrl(savedVideo);
       }
-      console.log("Restoring video from storage:", savedVideo);
     }
-  }, [videoUrl, setVideoUrl]);
+  }, [videoUrl]);
 
   useEffect(() => {
-    if (hydrated && !videoUrl) {
+    if (hydrated && !videoUrl && !lectureId) {
       router.push("/upload");
     }
   }, [hydrated, videoUrl, router]);
@@ -89,6 +106,54 @@ export default function EditorPage() {
 
     fetchSummary();
   }, [subtitles]);
+
+  useEffect(() => {
+    console.log("Fetching lecture...");
+    if (!lectureId || lectureId === "[lectureId]" || !session) return;
+
+    const fetchLecture = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/lectures/${lectureId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${session.accessToken}`,
+            },
+          },
+        );
+
+        if (!res.ok) {
+          console.error("API failed:", await res.text());
+          return;
+        }
+
+        const data = await res.json();
+        console.log("Lecture data:", data);
+
+        if (!data?.subtitles) {
+          console.error("Invalid lecture data:", data);
+          return;
+        }
+
+        const formattedSubtitles = data.subtitles.map(
+          (s: any, index: number) => ({
+            id: index,
+            start: s.start,
+            end: s.end,
+            original: s.text,
+            translated: data.translatedSubtitles?.[index]?.text || "",
+          }),
+        );
+
+        setSubtitles(formattedSubtitles);
+        setIsFromBackend(true);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchLecture();
+  }, [lectureId, session]);
 
   // useEffect(() => {
   //   if (subtitles.length > 0) {

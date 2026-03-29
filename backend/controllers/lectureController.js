@@ -3,7 +3,8 @@ import User from "../models/userModels.js";
 
 export const createLecture = async (req, res) => {
   try {
-    const { title, duration, content } = req.body;
+    const { title, duration, content, subtitles, translatedSubtitles } =
+      req.body;
 
     // ✅ 1. Validate input
     if (!title || title.trim() === "") {
@@ -48,6 +49,8 @@ export const createLecture = async (req, res) => {
       title: title.trim(),
       duration,
       content,
+      subtitles: subtitles || [],
+      translatedSubtitles: translatedSubtitles || [],
     });
 
     // 🔁 7. Update stats
@@ -90,6 +93,41 @@ export const createLecture = async (req, res) => {
     });
   } catch (error) {
     console.error("Create Lecture Error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// GET /api/lectures
+export const getLectures = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.user.email });
+
+    const lectures = await Lecture.find({ user: user._id }).sort({
+      createdAt: -1,
+    });
+
+    res.json(lectures);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// GET /api/lectures/:id
+export const getLectureById = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.user.email });
+
+    const lecture = await Lecture.findOne({
+      _id: req.params.id,
+      user: user._id,
+    });
+
+    if (!lecture) {
+      return res.status(404).json({ message: "Lecture not found" });
+    }
+
+    res.json(lecture);
+  } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
 };

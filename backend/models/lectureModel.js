@@ -1,5 +1,14 @@
 import mongoose from "mongoose";
 
+const subtitleSchema = new mongoose.Schema(
+  {
+    start: { type: Number, required: true },
+    end: { type: Number, required: true },
+    text: { type: String, required: true },
+  },
+  { _id: false }
+);
+
 const lectureSchema = new mongoose.Schema(
   {
     user: {
@@ -25,12 +34,12 @@ const lectureSchema = new mongoose.Schema(
     },
 
     subtitles: {
-      type: Array,
+      type: [subtitleSchema],
       default: [],
     },
 
     translatedSubtitles: {
-      type: Array,
+      type: [subtitleSchema],
       default: [],
     },
 

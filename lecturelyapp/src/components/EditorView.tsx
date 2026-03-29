@@ -10,6 +10,8 @@ import logo from "../../public/assets/LA.png";
 import { useApp } from "@/context/AppContext";
 import { Smokum } from "next/font/google";
 
+import { BsPerson, BsPlus } from "react-icons/bs";
+
 function getYouTubeId(url: string) {
   const match = url.match(/v=([^&]+)/);
   return match ? match[1] : null;
@@ -52,8 +54,6 @@ export const EditorView: React.FC<EditorViewProps> = ({
 
   const router = useRouter();
 
-  // const [isSticky, setIsSticky] = useState(false);
-
   const videoRef = useRef<HTMLVideoElement>(null);
   const [currentTime, setCurrentTime] = useState(0);
 
@@ -79,142 +79,95 @@ export const EditorView: React.FC<EditorViewProps> = ({
   return (
     <>
       <div>
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col transition-colors duration-300">
+        <div className="min-h-screen from-indigo-50 to-white dark:from-slate-950 dark:to-slate-900 bg-linear-to-br text-slate-800 dark:text-slate-200 font-sans transition-colors duration-300 flex flex-col">
           {/* Editor Navbar */}
-          {/* <nav
-            className={`flex justify-between items-center p-4 md:p-6 max-w-7xl mx-auto g-4 w-87 md:w-full border-b border-transparent md:border-none z-50 transition-all duration-300 ${
-              isSticky
-                ? "fixed top-5 left-3.5 right-3.5 md:left-5 md:right-5 rounded-4xl p-2 bg-white dark:bg-black shadow-lg"
-                : "relative"
-            }`}
-          >
-            <a href="/" className="flex items-center gap-2">
-              <img
-                src={logo.src}
-                alt="Lecturely Logo"
-                className="w-10 h-10 bg-black rounded-2xl"
-              />
-              <span className="hidden md:flex font-bold text-2xl text-slate-800 dark:text-slate-100 tracking-tight">
-                Lecturely.AI
-              </span>
-              <span className="bg-green-100 w-10 md:w-18 dark:bg-indigo-500/10 text-green-700 dark:text-indigo-400 text-[8px] px-2 py-0.5 md:text-[10px] rounded-full font-medium ml-2 border dark:border-indigo-500/20">
-                Editor Mode
-              </span>
-            </a>
-
-            <div className="hidden md:flex gap-8 text-slate-600 dark:text-slate-400 font-medium">
-              <a
-                href="#"
-                className="hover:text-indigo-600 dark:hover:text-indigo-400 transition"
-              >
-                Home
-              </a>
-            </div>
-
-            <div className="flex gap-2 md:gap-10 items-center">
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-              >
-                {isDarkMode ? (
-                  <Moon className="w-5 h-5" />
-                ) : (
-                  <Sun className="w-5 h-5" />
-                )}
-              </button>
-
-              <button
-                onClick={onNewProject}
-                className="text-[10px] md:text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
-              >
-                New Project
-              </button>
-              <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
-              <button
-                onClick={onDownload}
-                className="flex items-center gap-2 bg-indigo-600 text-white px-2 py-1 md:px-4 md:py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition"
-              >
-                <Download className="w-4 h-4" />{" "}
-                <p className="text-[14px] hidden md:inline">Export SRT</p>
-              </button>
-            </div>
-          </nav> */}
-          {/* End of navBar */}
-
-          {/* Sidebar start */}
-          {/* Desktop Sidebar */}
-          <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-white dark:bg-black border-r border-slate-200 dark:border-slate-800 p-6 flex-col justify-between z-50">
-            {/* Logo */}
-            <div>
-              <div className="flex items-center gap-2 mb-10">
+          <nav className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center p-4 md:p-6 w-full bg-white dark:bg-black border-b border-slate-200 dark:border-slate-800 shadow-md">
+            <div className="flex items-center gap-2">
+              {/* Logo */}
+              <a href="/" className="flex items-center gap-2">
                 <img src={logo.src} className="w-10 h-10 rounded-xl" />
-                <span className="font-bold text-xl">Lecturely.AI</span>
-              </div>
-              <span className="bg-green-100 w-10 md:w-18 dark:bg-indigo-500/10 text-green-700 dark:text-indigo-400 text-[8px] px-2 py-0.5 md:text-[10px] rounded-full font-medium ml-2 border dark:border-indigo-500/20">
+                <span className="hidden md:flex font-bold text-2xl">
+                  Lecturely.AI
+                </span>
+              </a>
+              <span className="bg-green-100 w-15.5 md:w-18 dark:bg-indigo-500/10 text-green-700 dark:text-indigo-400 text-[8px] px-2 py-0.5 md:text-[10px] rounded-full font-medium ml-2 border dark:border-indigo-500/20">
                 Editor Mode
               </span>
             </div>
 
-            <div className="hidden md:flex gap-8 text-slate-600 dark:text-slate-400 font-medium">
-              <a
-                href="/"
-                className="hover:text-indigo-600 dark:hover:text-indigo-400 transition"
-              >
-                Home
-              </a>
-            </div>
-
-            <button
-              onClick={onNewProject}
-              className="text-[10px] md:text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
-            >
-              New Project
-            </button>
-            {/* <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div> 
-            <button
-              onClick={onDownload}
-              className="flex items-center gap-2 bg-indigo-600 text-white px-2 py-1 md:px-4 md:py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition"
-            >
-              <Download className="w-4 h-4" />{" "}
-              <p className="text-[14px] hidden md:inline">Export SRT</p>
-            </button>
-
-            {/* Bottom Section */}
-            <div className="flex flex-col gap-4">
-              {/* Theme */}
-              <button onClick={toggleTheme} className="flex items-center gap-2">
-                {isDarkMode ? <Moon /> : <Sun />}
-                Theme
-              </button>
-            </div>
-          </aside>
-
-          {/* Mobile Toggle Button */}
-          <button
-            onClick={() => setMobileOpen(true)}
-            className="md:hidden fixed top-4 left-4 z-50"
-          >
-            <Menu />
-          </button>
-
-          {/* Mobile Drawer */}
-          {mobileOpen && (
-            <div className="fixed inset-0 bg-black/50 z-50">
-              <div className="w-64 h-full bg-white dark:bg-black p-6">
-                <button onClick={() => setMobileOpen(false)} className="mb-6">
-                  <X />
+            {/* Right Section */}
+            <div className="flex items-center gap-3 md:gap-6">
+              {/* ========== MOBILE ========== */}
+              <div className="flex items-center gap-3 md:hidden">
+                {/* Theme */}
+                <button
+                  onClick={toggleTheme}
+                  className="p-2 rounded-full cursor-pointer"
+                >
+                  {isDarkMode ? (
+                    <Moon className="w-5 h-5" />
+                  ) : (
+                    <Sun className="w-5 h-5" />
+                  )}
                 </button>
 
-                <nav className="flex flex-col gap-5">
-                  <a href="#home">Home</a>
-                </nav>
+                <button
+                  onClick={onNewProject}
+                  className="text-sm font-medium bg-indigo-600 hover:bg-indigo-700 text-white p-1 rounded-xl w-8 h-8 flex items-center justify-center cursor-pointer"
+                >
+                  <BsPlus className="w-5 h-5" />
+                </button>
+
+                {/* Profile */}
+                <div className="relative">
+                  <button
+                    onClick={() => router.push("/profile")}
+                    className="p-2 rounded-full bg-slate-200 dark:bg-slate-700 cursor-pointer"
+                  >
+                    <BsPerson />
+                  </button>
+                </div>
+              </div>
+
+              {/* ========== DESKTOP ========== */}
+              <div className="hidden md:flex items-center gap-6">
+                {/* Theme */}
+                <button
+                  onClick={toggleTheme}
+                  className="p-2 rounded-full cursor-pointer"
+                >
+                  {isDarkMode ? (
+                    <Moon className="w-5 h-5" />
+                  ) : (
+                    <Sun className="w-5 h-5" />
+                  )}
+                </button>
+
+                {/* New Project */}
+                <button
+                  onClick={onNewProject}
+                  className="text-sm font-medium text-black dark:text-white hover:text-indigo-500 cursor-pointer"
+                >
+                  New Project
+                </button>
+
+                <div className="relative">
+                  <button
+                    onClick={() => router.push("/profile")}
+                    className="p-2 w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 cursor-pointer flex items-center justify-center"
+                  >
+                    <BsPerson className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* <div className="h-6 w-px bg-slate-200 dark:bg-slate-700"></div> */}
               </div>
             </div>
-          )}
-          {/* Sidebar end */}
+          </nav>
+          {/* End of navBar */}
 
           {/* Main Workspace */}
-          <div className="md:ml-64 md:p-5">
+          <div className="mt-24 md:p-5">
             <main className="flex flex-col md:flex-row w-full md:h-[calc(100vh-100px)] overflow-hidden">
               {/* Left: Video Preview */}
               <div className="md:w-1/2 flex flex-col items-center justify-center relative">
@@ -330,6 +283,15 @@ export const EditorView: React.FC<EditorViewProps> = ({
                 </div>
               </div>
             </main>
+
+            {/* ================= FLOATING DOWNLOAD ================= */}
+            <button
+              onClick={onDownload}
+              className="fixed bottom-6 right-6 z-50 bg-indigo-600 hover:bg-indigo-700 text-white p-4 rounded-full shadow-lg"
+            >
+              <Download className="w-5 h-5" />
+            </button>
+
             <div className="border-t border-slate-200 dark:border-slate-700 p-4 m-4">
               <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-2 flex justify-center">
                 AI Summary
