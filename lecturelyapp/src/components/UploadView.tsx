@@ -39,7 +39,7 @@ export const UploadView: React.FC<UploadViewProps> = ({
   console.log("videoUrl:", videoUrl);
   // console.log("isReady:", isReady);
   return (
-    <div id="home" className="min-h-screen md:ml-64">
+    <div id="home" className="min-h-screen mt-16 md:mt-0 md:ml-64">
       <main className="max-w-4xl mx-auto p-6 animate-fade-in">
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight text-slate-900 dark:text-white transition-colors">

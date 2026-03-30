@@ -56,7 +56,7 @@ export default function HistoryPage() {
         >
           <BsArrowLeftShort />
         </a>
-        <p>Back</p>
+        <p className="dark:text-white">Back</p>
       </div>
 
       <div className="flex justify-center">
@@ -67,9 +67,9 @@ export default function HistoryPage() {
         <div
           key={lecture._id}
           onClick={() => openLecture(lecture._id)}
-          className="p-4 border rounded-lg mb-3 cursor-pointer hover:bg-gray-50"
+          className="p-4 border rounded-lg mb-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         >
-          <p className="font-semibold">{lecture.title}</p>
+          <p className="font-semibold wrap-break-word">{lecture.title}</p>
           <p className="text-sm text-gray-400">
             {new Date(lecture.createdAt).toLocaleDateString()}
           </p>

@@ -43,6 +43,12 @@ export const Sidebar = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     const sections = ["home", "tools", "summary", "contact"];
 
@@ -67,6 +73,8 @@ export const Sidebar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  if (!mounted) return null;
 
   return (
     <>
@@ -199,13 +207,26 @@ export const Sidebar = () => {
       </aside>
 
       {/* Mobile Toggle Button */}
-      <div className="p-5 md:p-2">
-        <button
-          onClick={() => setMobileOpen(true)}
-          className="md:hidden fixed top-4 left-4 z-50"
-        >
+      <div className="flex items-center justify-between md:hidden fixed top-0 left-0 w-full bg-white dark:bg-black border-b border-slate-200 dark:border-slate-800 p-4 z-50 shadow-sm">
+        <button onClick={() => setMobileOpen(true)} className="md:hidden">
           <img src={logo.src} className="w-10 h-10 rounded-xl" />
         </button>
+        <div className="flex items-center gap-4">
+          {mounted && (
+            <button
+              onClick={toggleTheme}
+              className="flex items-center cursor-pointer"
+            >
+              {isDarkMode ? <Moon /> : <Sun />}
+            </button>
+          )}
+          <a
+            href="/history"
+            className="flex items-center hover:text-indigo-500"
+          >
+            <HistoryIcon className={` ${open ? "w-5 h-5" : ""} text-current`} />
+          </a>
+        </div>
       </div>
 
       {/* Mobile Drawer */}
@@ -215,7 +236,7 @@ export const Sidebar = () => {
           { id: "tools", icon: ToolCase },
           { id: "summary", icon: FileText },
           { id: "contact", icon: Contact },
-          { id: "profile", icon: BsPerson },
+          // { id: "profile", icon: BsPerson },
         ].map(({ id, icon: Icon }) => (
           <a
             key={id}
@@ -227,6 +248,12 @@ export const Sidebar = () => {
             <Icon className="w-6 h-6" />
           </a>
         ))}
+        <a
+          href="/profile"
+          className="flex flex-col items-center justify-center rounded-2xl border border-slate-800 dark:border-slate-200 p-1"
+        >
+          <BsPerson />
+        </a>
       </div>
     </>
   );

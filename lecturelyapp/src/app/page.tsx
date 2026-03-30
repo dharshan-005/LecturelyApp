@@ -12,15 +12,17 @@ import Link from "next/link";
 
 import { useApp } from "@/context/AppContext";
 import Tools from "@/components/Tools";
+import { useTheme } from "@/context/ThemeContext";
 
 export default function LecturelyApp() {
   const { file, setFile, transcriptText, videoUrl, setVideoUrl } = useApp();
   // const [isReady, setIsReady] = useState(false);
 
   // --- Theme State ---
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-
+  const { isDarkMode, toggleTheme } = useTheme();
+  
   const { targetLang, setTargetLang } = useApp();
+  const [title, setTitle] = useState("");
 
   const getVideoDuration = (file: File): Promise<number> => {
     return new Promise((resolve, reject) => {
@@ -71,29 +73,6 @@ export default function LecturelyApp() {
     setVideoUrl(e.target.value);
   };
 
-  // Theme
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      setIsDarkMode(true);
-
-      document.documentElement.classList.add("dark");
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = !isDarkMode;
-    setIsDarkMode(newTheme);
-
-    if (newTheme) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  };
-
   const startProcessing = () => {
     if (!file && !videoUrl) {
       alert("Please upload a video or provide a URL.");
@@ -114,7 +93,7 @@ export default function LecturelyApp() {
     <>
       <div>
         <div className="from-indigo-50 to-white dark:from-slate-950 dark:to-slate-900 bg-linear-to-br text-slate-800 dark:text-slate-200 font-sans transition-colors duration-300">
-          <Sidebar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+          <Sidebar />
 
           {/* --- Upload View --- */}
           <UploadView
@@ -127,6 +106,8 @@ export default function LecturelyApp() {
             onUrlChange={handleUrlChange}
             onLanguageChange={handleLanguageChange}
             onStart={startProcessing}
+            title={title}
+            setTitle={setTitle}
             // isReady={isReady}
           />
 

@@ -10,35 +10,49 @@ type ThemeContextType = {
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window === "undefined") {
-      return false;
-    }
-    return localStorage.getItem("theme") === "dark";
-  });
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const toggleTheme = () => setIsDarkMode((prev) => !prev);
-
-  // Apply theme to HTML
+  // ✅ Run ONLY on client after mount
   useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    const isDark = saved === "dark";
+
+    setIsDarkMode(isDark);
+    setMounted(true);
+  }, []);
+
+  const toggleTheme = () => {
+    setIsDarkMode((prev) => {
+      const newTheme = !prev;
+
+      if (newTheme) {
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("theme", "light");
+      }
+
+      return newTheme;
+    });
+  };
+
+  // Apply theme after mount + change
+  useEffect(() => {
+    if (!mounted) return;
+
     const root = document.documentElement;
 
     if (isDarkMode) {
       root.classList.add("dark");
-      localStorage.setItem("theme", "dark");
     } else {
       root.classList.remove("dark");
-      localStorage.setItem("theme", "light");
     }
-  }, [isDarkMode]);
+  }, [isDarkMode, mounted]);
 
-  // Load saved theme
-  // useEffect(() => {
-  //   const saved = localStorage.getItem("theme");
-  //   if (saved === "dark") {
-  //     setIsDarkMode(true);
-  //   }
-  // }, []);
+  // 🚨 CRITICAL: prevent hydration mismatch
+  if (!mounted) return null;
 
   return (
     <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
