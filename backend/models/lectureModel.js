@@ -6,7 +6,7 @@ const subtitleSchema = new mongoose.Schema(
     end: { type: Number, required: true },
     text: { type: String, required: true },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const lectureSchema = new mongoose.Schema(
@@ -46,6 +46,12 @@ const lectureSchema = new mongoose.Schema(
     language: {
       type: String,
       default: "en",
+    },
+
+    notes: {
+      summary: String,
+      keyPoints: [String],
+      importantConcepts: [String],
     },
   },
   { timestamps: true },

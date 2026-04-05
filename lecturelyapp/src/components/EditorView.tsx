@@ -11,6 +11,7 @@ import { useApp } from "@/context/AppContext";
 import { Smokum } from "next/font/google";
 
 import { BsPerson, BsPlus } from "react-icons/bs";
+import { ExportMode } from "@/utils/subtitleExport";
 
 function getYouTubeId(url: string) {
   const match = url.match(/v=([^&]+)/);
@@ -23,13 +24,18 @@ interface EditorViewProps {
   isDarkMode: boolean;
   toggleTheme: () => void;
   onSubtitleChange: (id: number, newText: string) => void;
-  onDownload: () => void;
+  onDownload: (format: "srt" | "vtt" | "txt" | "json", mode: ExportMode) => void;
   onNewProject: () => void;
+  // summary: string;
+  // loadingSummary: boolean;
   summary: string;
-  loadingSummary: boolean;
+  keyPoints: string[];
+  concepts: string[];
 
   videoSrc?: string | null;
 }
+
+// type ExportMode = "original" | "translated" | "bilingual";
 
 const languageNames: Record<string, string> = {
   ta: "Tamil",
@@ -46,7 +52,9 @@ export const EditorView: React.FC<EditorViewProps> = ({
   onDownload,
   onNewProject,
   summary,
-  loadingSummary,
+  // loadingSummary,
+  keyPoints,
+  concepts,
   videoSrc,
 }) => {
   const { data: session } = useSession();
@@ -66,6 +74,15 @@ export const EditorView: React.FC<EditorViewProps> = ({
   const { isDarkMode, toggleTheme } = useApp();
 
   const subtitlerefs = useRef<Record<number, HTMLDivElement | null>>({});
+  const [showTranslated, setShowTranslated] = useState(true);
+
+  // Download file
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
+  const [exportMode, setExportMode] = useState<ExportMode>("translated");
+  const [format, setFormat] = useState<"srt" | "vtt" | "txt" | "json">("srt");
+
+  const modes: ExportMode[] = ["original", "translated", "bilingual"];
+  const formats: ("srt" | "vtt" | "txt" | "json")[] = ["srt", "vtt", "txt", "json"];
 
   useEffect(() => {
     if (activeSubtitle && subtitlerefs.current[activeSubtitle.id]) {
@@ -146,7 +163,7 @@ export const EditorView: React.FC<EditorViewProps> = ({
                 {/* New Project */}
                 <button
                   onClick={onNewProject}
-                  className="text-sm font-medium text-black dark:text-white hover:text-indigo-500 cursor-pointer"
+                  className="text-sm font-medium text-black dark:text-white hover:text-indigo-500 dark:hover:text-indigo-500 cursor-pointer"
                 >
                   New Project
                 </button>
@@ -201,9 +218,13 @@ export const EditorView: React.FC<EditorViewProps> = ({
                   {/* video play */}
                   {subtitles.length > 0 && (
                     <div className="absolute bottom-[8%] left-0 right-0 flex justify-center px-4 pointer-events-none">
-                      <span className="bg-black/50 text-white px-4 py-2 rounded-lg text-[10px] md:text-base lg:text-lg leading-relaxed text-center max-w-[90%] backdrop-blur-sm">
+                      <span className="bg-black/60 text-white px-3 py-1.5 rounded-md text-xs md:text-sm leading-snug text-center max-w-[80%] wrap-break-word backdrop-blur-sm">
                         {/* {subtitles[0].translated} */}
-                        {activeSubtitle?.translated || activeSubtitle?.original}
+                        {/* {activeSubtitle?.translated || activeSubtitle?.original} */}
+                        {showTranslated
+                          ? activeSubtitle?.translated ||
+                            activeSubtitle?.original
+                          : activeSubtitle?.original}
                       </span>
                     </div>
                   )}
@@ -222,7 +243,13 @@ export const EditorView: React.FC<EditorViewProps> = ({
                       {languageNames[targetLang] || targetLang}
                     </p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 items-center">
+                    <button
+                      onClick={() => setShowTranslated((prev) => !prev)}
+                      className="px-2 py-1 text-xs bg-indigo-500 text-white rounded"
+                    >
+                      {showTranslated ? "Original" : "Translated"}
+                    </button>
                     <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-slate-800 rounded-lg">
                       <Globe className="w-4 h-4" />
                     </button>
@@ -286,13 +313,48 @@ export const EditorView: React.FC<EditorViewProps> = ({
 
             {/* ================= FLOATING DOWNLOAD ================= */}
             <button
-              onClick={onDownload}
+              onClick={() => setShowDownloadModal(true)}
               className="fixed bottom-6 right-6 z-50 bg-indigo-600 hover:bg-indigo-700 text-white p-4 rounded-full shadow-lg"
             >
               <Download className="w-5 h-5" />
             </button>
 
             <div className="border-t border-slate-200 dark:border-slate-700 p-4 m-4">
+              {/* Summary */}
+              <h3 className="font-bold text-center mb-2">Summary</h3>
+              <p className="text-sm whitespace-pre-line">{summary}</p>
+
+              {/* Key Points */}
+              {keyPoints?.length > 0 && (
+                <div className="mt-4">
+                  <h3 className="font-bold mb-2">Key Points</h3>
+                  <ul className="list-disc ml-5 text-sm">
+                    {keyPoints.map((point, i) => (
+                      <li key={i}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Concepts */}
+              {concepts?.length > 0 && (
+                <div className="mt-4">
+                  <h3 className="font-bold mb-2">Important Concepts</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {concepts.map((c, i) => (
+                      <span
+                        key={i}
+                        className="px-2 py-1 bg-indigo-100 rounded text-xs"
+                      >
+                        {c}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* <div className="border-t border-slate-200 dark:border-slate-700 p-4 m-4">
               <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-2 flex justify-center">
                 AI Summary
               </h3>
@@ -304,10 +366,79 @@ export const EditorView: React.FC<EditorViewProps> = ({
                   {summary}
                 </p>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
+
+      {/* Download Modal */}
+      {showDownloadModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-slate-900 rounded-xl p-6 w-[90%] max-w-md">
+            <h2 className="text-lg font-bold mb-4">Download Subtitles</h2>
+
+            {/* FORMAT */}
+            <div className="mb-4">
+              <p className="text-sm font-medium mb-2">Format</p>
+              <div className="flex gap-2">
+                {formats.map((f) => (
+                  <button
+                    key={f}
+                    onClick={() => setFormat(f as any)}
+                    className={`px-3 py-1 rounded ${
+                      format === f
+                        ? "bg-indigo-600 text-white"
+                        : "bg-slate-200 dark:bg-slate-700"
+                    }`}
+                  >
+                    {f.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* MODE */}
+            <div className="mb-4">
+              <p className="text-sm font-medium mb-2">Content</p>
+              <div className="flex flex-col gap-2">
+                {modes.map((m) => (
+                  <button
+                    key={m}
+                    onClick={() => setExportMode(m as any)}
+                    className={`px-3 py-2 rounded text-left ${
+                      exportMode === m
+                        ? "bg-indigo-600 text-white"
+                        : "bg-slate-200 dark:bg-slate-700"
+                    }`}
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* ACTIONS */}
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setShowDownloadModal(false)}
+                className="px-4 py-2 rounded bg-slate-300 dark:bg-slate-700"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={() => {
+                  onDownload(format, exportMode);
+                  setShowDownloadModal(false);
+                }}
+                className="px-4 py-2 rounded bg-indigo-600 text-white"
+              >
+                Download
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

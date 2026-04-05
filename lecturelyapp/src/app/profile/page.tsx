@@ -95,7 +95,7 @@ const page = () => {
       const res = await fetch("http://localhost:5000/api/users/upload-avatar", {
         method: "PATCH",
         headers: {
-          Authorization: `Bearer ${session?.accessToken}`,
+          Authorization: `Bearer ${session?.user.email}`,
         },
         body: formData,
       });
@@ -285,7 +285,7 @@ const page = () => {
       try {
         const res = await fetch("http://localhost:5000/api/users/profile", {
           headers: {
-            Authorization: `Bearer ${session.accessToken}`,
+            Authorization: `Bearer ${session.user.email}`,
           },
         });
 

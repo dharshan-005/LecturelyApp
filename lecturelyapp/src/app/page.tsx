@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useApp } from "@/context/AppContext";
 import Tools from "@/components/Tools";
 import { useTheme } from "@/context/ThemeContext";
+import SummaryNew from "@/components/SummaryNew";
 
 export default function LecturelyApp() {
   const { file, setFile, transcriptText, videoUrl, setVideoUrl } = useApp();
@@ -112,14 +113,14 @@ export default function LecturelyApp() {
           />
 
           {/* Tools */}
-          <div>
+          {/* <div>
             <Tools />
-          </div>
+          </div> */}
 
           {/* Summary part */}
-          {/* <div>
+          <div>
             <SummaryNew />
-          </div> */}
+          </div>
 
           <div>
             <hr className="border-2 mt-2" />

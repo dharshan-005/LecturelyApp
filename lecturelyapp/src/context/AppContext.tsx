@@ -31,6 +31,9 @@ type AppContextType = {
 
   isFromBackend: boolean;
   setIsFromBackend: (v: boolean) => void;
+
+  title: string;
+  setTitle: (title: string) => void;
 };
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -48,6 +51,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
 
   const [isFromBackend, setIsFromBackend] = useState(false);
+
+  const [title, setTitle] = useState("");
 
   useLayoutEffect(() => {
     if (isFromBackend) return; // 🚨 STOP override
@@ -105,6 +110,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("theme", newTheme ? "dark" : "light");
   };
 
+  useEffect(() => {
+    const storedTitle = localStorage.getItem("title");
+    if (storedTitle) setTitle(storedTitle);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("title", title);
+  }, [title]);
+
   return (
     <AppContext.Provider
       value={{
@@ -123,6 +137,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         hydrated,
         isFromBackend,
         setIsFromBackend,
+        title,
+        setTitle,
       }}
     >
       {children}

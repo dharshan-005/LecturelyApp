@@ -18,14 +18,14 @@ export default function SummaryNew() {
 
   const [format, setFormat] = useState("paragraph");
 
-  //   Summary logic here
+  // Summary logic here
   const [text, setText] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [inputMode, setInputMode] = useState<"none" | "text" | "file">("none"); // "text" or "file"
+  const [inputMode, setInputMode] = useState<"none" | "text" | "file">("none");
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -56,7 +56,6 @@ export default function SummaryNew() {
       let res: Response;
 
       if (inputMode === "text") {
-        // TEXT MODE (Gemini)
         res = await fetch("/api/summarize", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -68,7 +67,6 @@ export default function SummaryNew() {
           }),
         });
       } else {
-        // DOC MODE (Python API)
         const formData = new FormData();
         formData.append("file", file!);
         formData.append("language", selectedLanguage);
@@ -88,7 +86,6 @@ export default function SummaryNew() {
       }
 
       const data = await res.json();
-
       setSummary(data.summary || "No summary returned");
 
       if (inputMode === "file") {
@@ -104,8 +101,11 @@ export default function SummaryNew() {
 
   return (
     <>
-      <div id="summary" className="w-auto h-screen p-4 md:ml-64">
-        <div className="flex justify-center">
+      <div
+        id="summary"
+        className="min-h-screen p-4 md:pt-10 md:ml-64"
+      >
+        <div className="flex justify-center mb-6">
           <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
             Summary
           </h1>
@@ -113,135 +113,116 @@ export default function SummaryNew() {
 
         <form
           onSubmit={handleSubmit}
-          className="w-[97.5%] h-10/12 m-4 border-2 rounded-2xl"
+          className="mx-auto w-full lg:max-w-6xl border-2 rounded-2xl bg-white dark:bg-slate-900 overflow-hidden"
         >
-          {/* Top level */}
-          <div className="flex justify-around p-4">
-            <div
-              onMouseEnter={() => setOpenLang(true)}
-              onMouseLeave={() => setOpenLang(false)}
-            >
-              <DropdownMenu
-                modal={false}
-                open={openLang}
-                onOpenChange={setOpenLang}
+          {/* Top level Controls */}
+          <div className="flex flex-col lg:flex-row gap-4 p-4 justify-between border-b">
+            <div className="flex flex-col sm:flex-row gap-4 w-auto">
+              <div
+                onMouseEnter={() => setOpenLang(true)}
+                onMouseLeave={() => setOpenLang(false)}
+                className="w-full sm:w-auto"
               >
-                <DropdownMenuTrigger
-                  //   onMouseEnter={() => setOpenLang(true)}
-                  //   onMouseLeave={() => setOpenLang(false)}
-                  className="hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer border-2 p-2 w-40 justify-between rounded-2xl flex flex-row items-center gap-1"
+                <DropdownMenu
+                  modal={false}
+                  open={openLang}
+                  onOpenChange={setOpenLang}
                 >
-                  <h1 className="text-sm font-medium">{selectedLanguage}</h1>
-                  <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-200 ${
-                      openLang ? "rotate-180" : "rotate-0"
-                    }`}
-                  />
-                </DropdownMenuTrigger>
+                  <DropdownMenuTrigger className="hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer border-2 p-2 w-full sm:w-40 justify-between rounded-2xl flex flex-row items-center gap-1 bg-transparent">
+                    <h1 className="text-sm font-medium">{selectedLanguage}</h1>
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform ${openLang ? "rotate-180" : "rotate-0"}`}
+                    />
+                  </DropdownMenuTrigger>
 
-                <DropdownMenuContent
-                  align="start"
-                  className="w-40 bg-gray-100 dark:bg-gray-800 rounded-lg"
-                >
-                  <DropdownMenuItem
-                    onSelect={() => setSelectedLanguage("English")}
-                    className="cursor-pointer outline-none focus:outline-none data-highlighted:data-highlighted:text-indigo-600 rounded-lg p-2"
+                  <DropdownMenuContent
+                    align="start"
+                    className="w-40 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg z-50"
                   >
-                    English
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onSelect={() => setSelectedLanguage("Japanese")}
-                    className="cursor-pointer outline-none focus:outline-none data-highlighted:text-indigo-600 rounded-lg p-2"
-                  >
-                    Japanese
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onSelect={() => setSelectedLanguage("Tamil")}
-                    className="cursor-pointer outline-none focus:outline-none data-highlighted:text-indigo-600 rounded-lg p-2"
-                  >
-                    Tamil
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onSelect={() => setSelectedLanguage("Hindi")}
-                    className="cursor-pointer outline-none focus:outline-none data-highlighted:text-indigo-600 rounded-lg p-2"
-                  >
-                    Hindi
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+                    {["English", "Japanese", "Tamil", "Hindi"].map((lang) => (
+                      <DropdownMenuItem
+                        key={lang}
+                        onSelect={() => setSelectedLanguage(lang)}
+                        className="cursor-pointer outline-none p-2 hover:bg-indigo-50 dark:hover:bg-indigo-900 rounded-lg"
+                      >
+                        {lang}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
 
-            <div className="flex gap-4">
               <div
                 onMouseEnter={() => setOpenShort(true)}
                 onMouseLeave={() => setOpenShort(false)}
+                className="w-full sm:w-auto"
               >
                 <DropdownMenu
                   modal={false}
                   open={openShort}
                   onOpenChange={setOpenShort}
                 >
-                  <DropdownMenuTrigger
-                    // onMouseEnter={() => setOpenShort(true)}
-                    // onMouseLeave={() => setOpenShort(false)}
-                    className="hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer border-2 w-52 justify-between p-2 rounded-2xl flex flex-row items-center gap-1"
-                  >
+                  <DropdownMenuTrigger className="hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer border-2 w-full sm:w-52 justify-between p-2 rounded-2xl flex flex-row items-center gap-1 bg-transparent">
                     <h1 className="text-sm font-medium">{selectedLength}</h1>
                     <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-200 ${
-                        openShort ? "rotate-180" : "rotate-0"
-                      }`}
+                      className={`w-4 h-4 transition-transform ${openShort ? "rotate-180" : "rotate-0"}`}
                     />
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent
                     align="start"
-                    className="w-40 bg-gray-100 dark:bg-gray-800 rounded-lg"
+                    className="w-40 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg z-50"
                   >
-                    <DropdownMenuItem
-                      onSelect={() => setSelectedLength("Short")}
-                      className="cursor-pointer outline-none focus:outline-none data-highlighted:text-indigo-600 rounded-lg p-2"
-                    >
-                      Short
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem
-                      onSelect={() => setSelectedLength("Long")}
-                      className="cursor-pointer outline-none focus:outline-none data-highlighted:text-indigo-600 rounded-lg p-2"
-                    >
-                      Long
-                    </DropdownMenuItem>
+                    {["Short", "Long"].map((len) => (
+                      <DropdownMenuItem
+                        key={len}
+                        onSelect={() => setSelectedLength(len)}
+                        className="cursor-pointer outline-none p-2 hover:bg-indigo-50 dark:hover:bg-indigo-900 rounded-lg"
+                      >
+                        {len}
+                      </DropdownMenuItem>
+                    ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
+            </div>
 
-              {/* Paragraph and Bullet */}
-              <div className="flex gap-1 items-center justify-around w-79 bg-gray-100 dark:bg-gray-500 rounded-2xl p-2 h-10">
-                <button
-                  onClick={() => setFormat("paragraph")}
-                  className={`flex w-auto px-4 py-1 cursor-pointer rounded-xl items-center transition-all ${format === "paragraph" ? "bg-white dark:bg-gray-800 shadow-sm" : "hover:text-indigo-600 dark:text-black"}`}
-                >
-                  <AlignLeft className="w-4 h-4" />
-                  <span className="ml-2">Paragraph</span>
-                </button>
+            {/* Paragraph and Bullet Toggle */}
+            <div className="flex gap-1 items-center justify-around w-full lg:w-auto bg-gray-100 dark:bg-gray-800 rounded-2xl p-1 h-12 lg:h-10">
+              <button
+                type="button"
+                onClick={() => setFormat("paragraph")}
+                className={`flex flex-1 lg:flex-none px-4 py-1.5 cursor-pointer rounded-xl items-center justify-center transition-all ${
+                  format === "paragraph"
+                    ? "bg-white dark:bg-gray-700 shadow-sm"
+                    : "text-gray-500 hover:text-indigo-600"
+                }`}
+              >
+                <AlignLeft className="w-4 h-4" />
+                <span className="ml-2 text-sm">Paragraph</span>
+              </button>
 
-                <button
-                  onClick={() => setFormat("bullet")}
-                  className={`flex w-auto px-4 py-1 cursor-pointer rounded-xl items-center transition-all ${format === "bullet" ? "bg-white dark:bg-gray-800 shadow-sm" : "hover:text-indigo-600 dark:text-black"}`}
-                >
-                  <List className="w-4 h-4" />
-                  <span className="ml-2">Bullet Points</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setFormat("bullet")}
+                className={`flex flex-1 lg:flex-none px-4 py-1.5 cursor-pointer rounded-xl items-center justify-center transition-all ${
+                  format === "bullet"
+                    ? "bg-white dark:bg-gray-700 shadow-sm"
+                    : "text-gray-500 hover:text-indigo-600"
+                }`}
+              >
+                <List className="w-4 h-4" />
+                <span className="ml-2 text-sm">Bullet Points</span>
+              </button>
             </div>
           </div>
 
-          {/* Main Content */}
-          <div className="w-[97.5%] h-9/12 ml-4 border-2 rounded-2xl p-4">
+          {/* Main Content Area */}
+          <div className="p-4">
             {viewMode === "input" ? (
-              <>
+              <div className="w-full">
                 <textarea
-                  className="w-full h-64 border rounded-xl p-4 text-sm bg-white dark:bg-gray-800 text-black dark:text-white resize-none"
+                  className="w-full h-64 md:h-80 border rounded-xl p-4 text-sm bg-white dark:bg-gray-800 text-black dark:text-white resize-none outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder={
                     inputMode === "file" && file
                       ? `Selected file: ${file.name}`
@@ -254,9 +235,7 @@ export default function SummaryNew() {
                   disabled={inputMode === "file"}
                 />
 
-                {/* Paste + Upload */}
-                <div className="flex gap-4 mt-4">
-                  {/* Paste Button */}
+                <div className="flex flex-wrap gap-4 mt-4">
                   <button
                     type="button"
                     onClick={async () => {
@@ -264,7 +243,6 @@ export default function SummaryNew() {
                         const clipboardText =
                           await navigator.clipboard.readText();
                         if (!clipboardText) return;
-
                         setInputMode("text");
                         setFile(null);
                         setText(clipboardText);
@@ -272,38 +250,41 @@ export default function SummaryNew() {
                         alert("Clipboard permission denied.");
                       }
                     }}
-                    className="flex items-center gap-2 border border-indigo-600 text-indigo-700 px-4 py-2 rounded-full hover:bg-indigo-50 transition"
+                    className="flex flex-1 sm:flex-none items-center justify-center gap-2 border border-indigo-600 text-indigo-700 px-6 py-2.5 rounded-full hover:bg-indigo-50 transition text-sm font-medium"
                   >
                     <Clipboard className="w-4 h-4" />
                     Paste
                   </button>
 
-                  {/* Upload Button */}
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex items-center gap-2 border border-indigo-600 text-indigo-700 px-4 py-2 rounded-full hover:bg-indigo-50 transition"
+                    className="flex flex-1 sm:flex-none items-center justify-center gap-2 border border-indigo-600 text-indigo-700 px-6 py-2.5 rounded-full hover:bg-indigo-50 transition text-sm font-medium"
                   >
                     <Upload className="w-4 h-4" />
                     Upload
                   </button>
                 </div>
-              </>
+              </div>
             ) : (
-              /* RESULT VIEW */
-              <div className="flex gap-4 h-full">
-                {/* Original */}
-                <div className="w-1/2 border rounded-xl p-4 overflow-auto bg-gray-50">
-                  <h2 className="font-semibold mb-2">Original</h2>
-                  <p className="text-sm whitespace-pre-wrap">
+              /* RESULT VIEW - Responsive Grid */
+              <div className="flex flex-col lg:flex-row gap-4 min-h-[400px]">
+                {/* Original Content */}
+                <div className="w-full lg:w-1/2 border rounded-xl p-4 overflow-auto bg-gray-50 dark:bg-gray-800/50">
+                  <h2 className="font-semibold mb-2 text-slate-700 dark:text-slate-200">
+                    Original
+                  </h2>
+                  <p className="text-sm whitespace-pre-wrap text-slate-600 dark:text-slate-400">
                     {text || "Original content not available"}
                   </p>
                 </div>
 
-                {/* Summarized */}
-                <div className="w-1/2 border rounded-xl p-4 overflow-auto bg-white">
-                  <div className="flex justify-between items-center mb-2">
-                    <h2 className="font-semibold">Summarized</h2>
+                {/* Summarized Content */}
+                <div className="w-full lg:w-1/2 border rounded-xl p-4 overflow-auto bg-white dark:bg-gray-800 shadow-sm">
+                  <div className="flex justify-between items-center mb-2 border-b pb-2">
+                    <h2 className="font-semibold text-slate-800 dark:text-slate-100">
+                      Summarized
+                    </h2>
                     <button
                       type="button"
                       onClick={() => {
@@ -313,24 +294,27 @@ export default function SummaryNew() {
                         setFile(null);
                         setInputMode("none");
                       }}
-                      className="text-indigo-600 text-sm hover:underline"
+                      className="text-indigo-600 text-sm font-bold hover:underline"
                     >
-                      New
+                      New Summary
                     </button>
                   </div>
-
-                  <p className="text-sm whitespace-pre-wrap">{summary}</p>
+                  <p className="text-sm whitespace-pre-wrap leading-relaxed text-slate-700 dark:text-slate-300">
+                    {summary}
+                  </p>
                 </div>
               </div>
             )}
           </div>
-          <div className="w-[97.5%] flex justify-end">
+
+          {/* Action Footer */}
+          <div className="p-4 flex justify-end bg-gray-50 dark:bg-transparent border-t lg:border-none">
             <button
               type="submit"
               disabled={loading}
-              className="bg-indigo-500 text-white cursor-pointer p-2 rounded-xl m-4 disabled:opacity-50"
+              className="w-full sm:w-auto bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-8 rounded-xl transition-all disabled:opacity-50 active:scale-95 shadow-md"
             >
-              {loading ? "Summarizing..." : "Summarize"}
+              {loading ? "Summarizing..." : "Summarize Now"}
             </button>
           </div>
 

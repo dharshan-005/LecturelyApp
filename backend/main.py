@@ -16,6 +16,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+def home():
+    return {"status": "running"}
+
 app.mount("/temp", StaticFiles(directory="temp"), name="temp")
 
 @app.post("/extract")

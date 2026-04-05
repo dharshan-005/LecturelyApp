@@ -5,6 +5,7 @@ import { EditorView } from "../../../components/EditorView";
 import { useApp } from "../../../context/AppContext";
 import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { toSRT, toVTT, toTXT, toJSON } from "@/utils/subtitleExport";
 // import Chatbot from "@/components/chat/Chatbot";
 
 export default function EditorPage() {
@@ -24,8 +25,11 @@ export default function EditorPage() {
 
   const router = useRouter();
 
+  const [keyPoints, setKeyPoints] = useState<string[]>([]);
+  const [concepts, setConcepts] = useState<string[]>([]);
+
   const [summary, setSummary] = useState("");
-  const [loadingSummary, setLoadingSummary] = useState(false);
+  // const [loadingSummary, setLoadingSummary] = useState(false);
 
   const params = useParams();
 
@@ -47,36 +51,36 @@ export default function EditorPage() {
   const transcript = subtitles.map((s) => s.original).join(" ");
   console.log("TRANSCRIPT:", transcript);
 
-  const fetchSummary = async () => {
-    if (!subtitles.length) return;
+  // const fetchSummary = async () => {
+  //   if (!subtitles.length) return;
 
-    setLoadingSummary(true);
+  //   setLoadingSummary(true);
 
-    const transcript = subtitles.map((s) => s.original).join(" ");
+  //   const transcript = subtitles.map((s) => s.original).join(" ");
 
-    const res = await fetch("/api/summarize", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        text: transcript,
-        language: "English",
-        length: "medium",
-        format: "bullet",
-      }),
-    });
+  //   const res = await fetch("/api/summarize", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       text: transcript,
+  //       language: "English",
+  //       length: "medium",
+  //       format: "bullet",
+  //     }),
+  //   });
 
-    if (!res.ok) {
-      console.error("Summary API failed");
-      return;
-    }
+  //   if (!res.ok) {
+  //     console.error("Summary API failed");
+  //     return;
+  //   }
 
-    const data = await res.json();
+  //   const data = await res.json();
 
-    setSummary(data.summary);
-    setLoadingSummary(false);
-  };
+  //   setSummary(data.summary);
+  //   setLoadingSummary(false);
+  // };
 
   useEffect(() => {
     if (hasLoadedLecture.current) return; // 🚨 BLOCK override
@@ -98,14 +102,14 @@ export default function EditorPage() {
 
   const summaryGenerated = useRef(false);
 
-  useEffect(() => {
-    if (subtitles.length === 0) return;
-    if (summaryGenerated.current) return;
+  // useEffect(() => {
+  //   if (subtitles.length === 0) return;
+  //   if (summaryGenerated.current) return;
 
-    summaryGenerated.current = true;
+  //   summaryGenerated.current = true;
 
-    fetchSummary();
-  }, [subtitles]);
+  //   fetchSummary();
+  // }, [subtitles]);
 
   useEffect(() => {
     console.log("Fetching lecture...");
@@ -117,10 +121,12 @@ export default function EditorPage() {
           `http://localhost:5000/api/lectures/${lectureId}`,
           {
             headers: {
-              Authorization: `Bearer ${session.accessToken}`,
+              Authorization: `Bearer ${session.user.email}`,
             },
           },
         );
+
+        console.log("SESSION:", session);
 
         if (!res.ok) {
           console.error("API failed:", await res.text());
@@ -147,6 +153,11 @@ export default function EditorPage() {
 
         setSubtitles(formattedSubtitles);
         setIsFromBackend(true);
+
+        // ✅ NEW — notes
+        setSummary(data.notes?.summary || "");
+        setKeyPoints(data.notes?.keyPoints || []);
+        setConcepts(data.notes?.importantConcepts || []);
       } catch (err) {
         console.error(err);
       }
@@ -177,41 +188,56 @@ export default function EditorPage() {
             prev.map((s) => (s.id === id ? { ...s, translated: text } : s)),
           )
         }
-        onDownload={() => {
+        onDownload={(format, mode) => {
           if (!subtitles.length) return;
 
-          function secondsToSRT(seconds: number) {
-            const date = new Date(seconds * 1000);
-            const hh = String(date.getUTCHours()).padStart(2, "0");
-            const mm = String(date.getUTCMinutes()).padStart(2, "0");
-            const ss = String(date.getUTCSeconds()).padStart(2, "0");
-            const ms = String(date.getUTCMilliseconds()).padStart(3, "0");
+          let content = "";
 
-            return `${hh}:${mm}:${ss},${ms}`;
+          switch (format) {
+            case "srt":
+              content = toSRT(subtitles, mode);
+              break;
+            case "vtt":
+              content = toVTT(subtitles, mode);
+              break;
+            case "txt":
+              content = toTXT(subtitles, mode);
+              break;
+            case "json":
+              content = toJSON(subtitles, mode);
+              break;
           }
 
-          const srtContent = subtitles
-            .map((sub, index) => {
-              return `${index + 1} 
-            ${secondsToSRT(sub.start)} --> ${secondsToSRT(sub.end)} 
-            ${sub.translated.trim() ? sub.translated : sub.original}
-            `;
-            })
-            .join("\n");
+          // if (format === "srt") {
+          //   content = toSRT(subtitles, mode);
+          // } else {
+          //   content = toVTT(subtitles, mode);
+          // }
 
-          const blob = new Blob([srtContent], { type: "text/plain" });
+          const mimeTypes = {
+            srt: "text/plain",
+            vtt: "text/vtt",
+            txt: "text/plain",
+            json: "application/json",
+          };
+
+          const blob = new Blob([content], { type: mimeTypes[format] });
+          
+          // const blob = new Blob([content], { type: "text/plain" });
           const url = URL.createObjectURL(blob);
 
           const a = document.createElement("a");
           a.href = url;
-          a.download = "subtitles.srt";
+          a.download = `subtitles.${format}`;
           a.click();
 
           URL.revokeObjectURL(url);
         }}
         onNewProject={() => router.push("/")}
         summary={summary}
-        loadingSummary={loadingSummary}
+        // loadingSummary={loadingSummary}
+        keyPoints={keyPoints}
+        concepts={concepts}
       />
       {/* <Chatbot context={transcript} /> */}
     </>

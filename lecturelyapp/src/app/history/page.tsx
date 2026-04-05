@@ -24,7 +24,7 @@ export default function HistoryPage() {
       try {
         const res = await fetch("http://localhost:5000/api/lectures", {
           headers: {
-            Authorization: `Bearer ${session?.accessToken}`,
+            Authorization: `Bearer ${session?.user.email}`,
           },
         });
 

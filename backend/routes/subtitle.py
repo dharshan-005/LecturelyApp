@@ -28,7 +28,7 @@ async def generate_from_url(url: str, target_lang: str, background_tasks: Backgr
     translated = await translate_subtitles(subtitles, target_lang)
 
     # 5️⃣ Cleanup
-    # background_tasks.add_task(delete_file, video_path)
+    background_tasks.add_task(delete_file, video_path)
     background_tasks.add_task(delete_file, audio_path)
     
     def srt_to_seconds(time_str: str) -> float:
@@ -36,7 +36,8 @@ async def generate_from_url(url: str, target_lang: str, background_tasks: Backgr
         h, m, s = map(int, hms.split(":"))
         return h * 3600 + m * 60 + s + int(ms) / 1000
     
-    print("Translated sample:", translated[0])
+    if translated:
+        print("Translated sample:", translated[0])
 
     merged = []
 

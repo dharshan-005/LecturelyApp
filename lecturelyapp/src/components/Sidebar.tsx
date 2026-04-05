@@ -102,7 +102,7 @@ export const Sidebar = () => {
                 <nav className={`flex flex-col gap-4 rounded-md`}>
                   {[
                     { id: "home", label: "Home", icon: Home },
-                    { id: "tools", label: "Tools", icon: ToolCase },
+                    // { id: "tools", label: "Tools", icon: ToolCase },
                     { id: "summary", label: "Summary", icon: FileText },
                     { id: "contact", label: "Contact", icon: Contact },
                   ].map(({ id, label, icon: Icon }) => (
@@ -233,7 +233,7 @@ export const Sidebar = () => {
       <div className="md:hidden fixed bottom-0 left-0 w-full bg-white dark:bg-black border-t border-slate-200 dark:border-slate-800 flex justify-around items-center py-3 z-50">
         {[
           { id: "home", icon: Home },
-          { id: "tools", icon: ToolCase },
+          // { id: "tools", icon: ToolCase },
           { id: "summary", icon: FileText },
           { id: "contact", icon: Contact },
           // { id: "profile", icon: BsPerson },

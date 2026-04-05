@@ -75,16 +75,36 @@ export default function UploadPage() {
         console.log("Selected:", lang);
         setTargetLang(lang);
       }}
-      onStart={() => {
-        if (file) {
-          localStorage.setItem("inputType", "file");
-        } else if (videoUrl) {
-          localStorage.setItem("inputType", "url");
-          localStorage.setItem("videoUrl", videoUrl);
+      onStart={async () => {
+        const finalTitle = title.trim() || "Untitled Lecture";
+
+        const duration = Number(localStorage.getItem("videoDuration")) || 0;
+
+        try {
+          const res = await fetch("http://localhost:5000/api/lectures", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${/* your token */ ""}`,
+            },
+            body: JSON.stringify({
+              title: finalTitle,
+              duration,
+              videoUrl,
+              targetLang,
+            }),
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            throw new Error(data.message);
+          }
+
+          router.push(`/editor/${data.lecture._id}`);
+        } catch (err) {
+          console.error("Create lecture error:", err);
         }
-        console.log("Sending:", targetLang);
-        localStorage.setItem("targetLang", targetLang);
-        router.push("/processing");
       }}
     />
   );

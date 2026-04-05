@@ -1,4 +1,6 @@
 {
-  "watch": ["server.js", "routes", "controllers", "models"],
-  "ignore": ["uploads/*", "outputs/*", "temp/*", "*.txt", "*.srt", "*.wav"]
+  "watch": ["server.js", "routes", "controllers", "models", "services"],
+  "ext": "js,json",
+  "ignore": ["uploads/*", "outputs/*", "temp/*", "*.txt", "*.srt", "*.wav"],
+  "exec": "node server.js"
 }
