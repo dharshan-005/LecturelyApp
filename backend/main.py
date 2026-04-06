@@ -5,6 +5,11 @@ from routes.subtitle import router as subtitle_router
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+import os
+
+os.makedirs("temp", exist_ok=True)
+os.makedirs("uploads", exist_ok=True)
+
 app = FastAPI()
 app.include_router(subtitle_router)
 
