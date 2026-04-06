@@ -22,7 +22,7 @@ export default function HistoryPage() {
   useEffect(() => {
     const fetchLectures = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/lectures", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/lectures`, {
           headers: {
             Authorization: `Bearer ${session?.user.email}`,
           },

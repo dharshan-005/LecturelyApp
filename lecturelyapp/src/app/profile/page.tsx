@@ -92,7 +92,7 @@ const page = () => {
     formData.append("email", session?.user?.email || "");
 
     try {
-      const res = await fetch("http://localhost:5000/api/users/upload-avatar", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/upload-avatar`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${session?.user.email}`,
@@ -283,7 +283,7 @@ const page = () => {
 
     const fetchUserData = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/users/profile", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`, {
           headers: {
             Authorization: `Bearer ${session.user.email}`,
           },

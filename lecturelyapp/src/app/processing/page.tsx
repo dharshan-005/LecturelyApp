@@ -158,7 +158,7 @@ export default function ProcessingPage() {
           console.log("Sending language to backend:", targetLang);
 
           const res = await fetch(
-            "http://localhost:5000/api/generate-subtitle",
+            `${process.env.NEXT_PUBLIC_API_URL}/api/generate-subtitle`,
             {
               method: "POST",
               body: formData,
@@ -175,7 +175,7 @@ export default function ProcessingPage() {
             JSON.stringify(responseData, null, 2),
           );
 
-          videoPath = `http://localhost:5000/uploads/${responseData.video}`;
+          videoPath = `${process.env.BASE_URL}/uploads/${responseData.video}`;
 
           setVideoUrl(videoPath);
           localStorage.setItem("lecturely_video", videoPath);
@@ -234,7 +234,7 @@ export default function ProcessingPage() {
         console.log("SESSION EMAIL:", session?.user?.email);
         console.log("LOCAL STORAGE EMAIL:", localStorage.getItem("email"));
 
-        const lectureRes = await fetch("http://localhost:5000/api/lectures", {
+        const lectureRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/lectures`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

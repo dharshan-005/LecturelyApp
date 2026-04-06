@@ -81,7 +81,7 @@ export default function UploadPage() {
         const duration = Number(localStorage.getItem("videoDuration")) || 0;
 
         try {
-          const res = await fetch("http://localhost:5000/api/lectures", {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/lectures`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

@@ -10,7 +10,7 @@ export default function SyncUser() {
   useEffect(() => {
     if (status !== "authenticated" || synced) return;
 
-    fetch("http://localhost:5000/api/users/sync", {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/sync`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

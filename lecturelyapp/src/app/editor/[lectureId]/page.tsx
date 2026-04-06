@@ -118,7 +118,7 @@ export default function EditorPage() {
     const fetchLecture = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/lectures/${lectureId}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/lectures/${lectureId}`,
           {
             headers: {
               Authorization: `Bearer ${session.user.email}`,

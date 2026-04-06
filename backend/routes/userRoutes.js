@@ -21,7 +21,10 @@ router.patch(
         return res.status(400).json({ message: "No file uploaded" });
       }
 
-      const imageUrl = `http://localhost:5000/uploads/${req.file.filename}`;
+      // const imageUrl = `http://localhost:5000/uploads/${req.file.filename}`;
+      const BASE_URL = process.env.BASE_URL;
+
+      const imageUrl = `${BASE_URL}/uploads/${req.file.filename}`;
 
       const user = await User.findOneAndUpdate(
         { email },
