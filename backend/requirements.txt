@@ -4,3 +4,4 @@ torch
 transformers==4.41.2
 pypdf
 python-docx
+pdfplumber
