@@ -20,6 +20,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Lecturely AI",
   description: "AI for translating and subtitle",
+  icons: {
+    icon: "/icon.png",
+  }
 };
 
 export default function RootLayout({
