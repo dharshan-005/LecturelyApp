@@ -166,8 +166,12 @@ export default function ProcessingPage() {
           );
 
           if (!res.ok) {
-            throw new Error("Upload failed");
+            const err = await res.json();
+            throw new Error(err.message || "Upload failed");
           }
+          // if (!res.ok) {
+          //   throw new Error("Upload failed");
+          // }
 
           responseData = await res.json();
           console.log(
@@ -175,7 +179,11 @@ export default function ProcessingPage() {
             JSON.stringify(responseData, null, 2),
           );
 
-          videoPath = `${process.env.BASE_URL}/uploads/${responseData.video}`;
+          // videoPath = `${process.env.BASE_URL}/uploads/${responseData.video}`;
+          const baseUrl =
+            process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+          videoPath = `${baseUrl}/uploads/${responseData.video}`;
 
           setVideoUrl(videoPath);
           localStorage.setItem("lecturely_video", videoPath);
@@ -230,41 +238,44 @@ export default function ProcessingPage() {
           console.error("No email found in session");
           return;
         }
-        
+
         console.log("SESSION EMAIL:", session?.user?.email);
         console.log("LOCAL STORAGE EMAIL:", localStorage.getItem("email"));
 
-        const lectureRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/lectures`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${email}`,
-          },
-          body: JSON.stringify({
-            title: title || file?.name || "Untitled Lecture",
-            duration: storedDuration ? Number(storedDuration) : 0,
-
-            videoUrl: videoPath,
-
-            subtitles: normalized.map((s) => ({
-              start: s.start,
-              end: s.end,
-              text: s.original,
-            })),
-
-            translatedSubtitles: normalized.map((s) => ({
-              start: s.start,
-              end: s.end,
-              text: s.translated,
-            })),
-
-            notes: responseData.notes || {
-              summary: "",
-              keyPoints: [],
-              importantConcepts: [],
+        const lectureRes = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/lectures`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${email}`,
             },
-          }),
-        });
+            body: JSON.stringify({
+              title: title || file?.name || "Untitled Lecture",
+              duration: storedDuration ? Number(storedDuration) : 0,
+
+              videoUrl: videoPath,
+
+              subtitles: normalized.map((s) => ({
+                start: s.start,
+                end: s.end,
+                text: s.original,
+              })),
+
+              translatedSubtitles: normalized.map((s) => ({
+                start: s.start,
+                end: s.end,
+                text: s.translated,
+              })),
+
+              notes: responseData.notes || {
+                summary: "",
+                keyPoints: [],
+                importantConcepts: [],
+              },
+            }),
+          },
+        );
 
         const lectureData = await lectureRes.json();
 
@@ -291,7 +302,7 @@ export default function ProcessingPage() {
     };
 
     run();
-  }, [file, videoUrl, targetLang]);
+  }, [file, videoUrl, targetLang, session]);
 
   return <ProcessingView progress={progress} stage={stage} />;
 }

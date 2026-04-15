@@ -44,6 +44,11 @@ const userSchema = new mongoose.Schema(
       },
     },
 
+    lastCreditRefresh: {
+      type: Date,
+      default: Date.now,
+    },
+
     recentLectures: [
       {
         _id: false,

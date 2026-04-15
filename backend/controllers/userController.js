@@ -12,10 +12,28 @@ export const getUserProfile = async (req, res) => {
 
     const user = await User.findOne({ email });
 
-    console.log("DB User:", user)
+    console.log("DB User:", user);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.lastCreditRefresh) {
+      user.lastCreditRefresh = new Date();
+      await user.save();
+    }
+
+    const now = new Date();
+    const last = new Date(user.lastCreditRefresh);
+
+    const diffInDays = Math.floor(
+      (now.getTime() - last.getTime()) / (1000 * 60 * 60 * 24),
+    );
+
+    if (diffInDays >= 1) {
+      user.stats.creditsRemaining = user.stats.totalCredits;
+      user.lastCreditRefresh = now;
+      await user.save();
     }
 
     res.json({
