@@ -21,10 +21,15 @@ router.patch(
         return res.status(400).json({ message: "No file uploaded" });
       }
 
-      // const imageUrl = `http://localhost:5000/uploads/${req.file.filename}`;
-      const BASE_URL = process.env.BASE_URL;
+      const BASE_URL =
+        process.env.NODE_ENV === "production"
+          ? process.env.BASE_URL
+          : "http://localhost:5000";
 
       const imageUrl = `${BASE_URL}/uploads/${req.file.filename}`;
+
+      console.log("Uploading for:", email);
+      console.log("Image URL:", imageUrl);
 
       const user = await User.findOneAndUpdate(
         { email },
@@ -32,7 +37,16 @@ router.patch(
         { new: true },
       );
 
-      res.json(user);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      console.log("RETURNING IMAGE ONLY");
+
+      // ✅ IMPORTANT FIX
+      res.json({
+        image: user.image,
+      });
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: "Upload failed" });

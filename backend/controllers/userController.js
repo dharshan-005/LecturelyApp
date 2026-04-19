@@ -42,7 +42,7 @@ export const getUserProfile = async (req, res) => {
 
     res.json({
       userName: user.userName,
-      image: user.image,
+      image: user.image || "",
       stats: user.stats,
       recentLectures: user.recentLectures,
     });

@@ -93,7 +93,7 @@ const page = () => {
 
     const formData = new FormData();
     formData.append("avatar", file);
-    formData.append("email", session?.user?.email || "");
+    // formData.append("email", session?.user?.email || "");
 
     try {
       const res = await fetch(
@@ -101,7 +101,7 @@ const page = () => {
         {
           method: "PATCH",
           headers: {
-            Authorization: `Bearer ${session?.user?.email}`,
+            Authorization: `Bearer ${session?.accessToken}`,
           },
           body: formData,
         },
@@ -109,7 +109,18 @@ const page = () => {
 
       const data = await res.json();
 
-      setProfileData((prev) => (prev ? { ...prev, image: data.image } : prev));
+      console.log("Upload response:", data);
+
+      if (!res.ok) {
+        console.error("Upload failed:", data);
+        return;
+      }
+
+      const imageUrl = data.image;
+
+      setProfileData((prev) =>
+        prev ? { ...prev, image: `${imageUrl}?t=${Date.now()}` } : prev,
+      );
     } catch (err) {
       console.error("Upload failed", err);
     }
@@ -125,7 +136,7 @@ const page = () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.user?.email}`,
+            Authorization: `Bearer ${session?.accessToken}`,
           },
           body: JSON.stringify({ title: editedTitle }),
         },
@@ -205,9 +216,10 @@ const page = () => {
     email: session?.user?.email || "No Email",
     role: "Student",
     avatar:
-      profileData?.image ||
-      session?.user?.image ||
-      "https://www.svgrepo.com/show/452030/avatar-default.svg",
+      profileData?.image && profileData.image.trim() !== ""
+        ? profileData.image
+        : session?.user?.image ||
+          "https://www.svgrepo.com/show/452030/avatar-default.svg",
     stats: normalizedStats,
     recentLectures: profileData?.recentLectures || [],
   };
@@ -335,7 +347,7 @@ const page = () => {
           `${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`,
           {
             headers: {
-              Authorization: `Bearer ${session?.user?.email}`,
+              Authorization: `Bearer ${session.accessToken}`,
             },
           },
         );
@@ -346,14 +358,24 @@ const page = () => {
         }
 
         const data = await res.json();
-        setProfileData(data);
+        // setProfileData(data);
+        setProfileData((prev) => {
+          // If user just uploaded, don't overwrite
+          if (prev?.image?.includes("?t=")) return prev;
+
+          // Merge instead of replace (important)
+          return {
+            ...prev,
+            ...data,
+          };
+        });
       } catch (err) {
         console.error("Error:", err);
       }
     };
 
     fetchUserData();
-  }, [status, session]);
+  }, [status]);
 
   console.log("Session:", session);
   console.log("Status:", status);
@@ -427,7 +449,13 @@ const page = () => {
           <div className="bg-white dark:bg-gray-900 dark:border-gray-800 rounded-2xl shadow-sm p-6 mb-6 border border-gray-100 flex flex-col md:flex-row items-center gap-6">
             <div className="relative">
               <img
-                src={user.avatar}
+                key={profileData?.image || "default"}
+                src={
+                  profileData?.image && profileData.image.trim() !== ""
+                    ? profileData.image
+                    : session?.user?.image ||
+                      "https://www.svgrepo.com/show/452030/avatar-default.svg"
+                }
                 alt="Profile"
                 className="w-24 h-24 rounded-full border-4 border-indigo-50 object-cover"
               />
