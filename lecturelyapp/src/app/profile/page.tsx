@@ -75,6 +75,9 @@ const page = () => {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editedTitle, setEditedTitle] = useState("");
+
   const isNewStats = (stats: any): stats is NewStats => {
     return (
       typeof stats?.subtitlesGenerated === "number" &&
@@ -93,19 +96,63 @@ const page = () => {
     formData.append("email", session?.user?.email || "");
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/upload-avatar`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${session?.user.email}`,
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/upload-avatar`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${session?.user?.email}`,
+          },
+          body: formData,
         },
-        body: formData,
-      });
+      );
 
       const data = await res.json();
 
       setProfileData((prev) => (prev ? { ...prev, image: data.image } : prev));
     } catch (err) {
       console.error("Upload failed", err);
+    }
+  };
+
+  const handleUpdateTitle = async (lectureId: string) => {
+    if (!editedTitle.trim()) return;
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/lectures/${lectureId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user?.email}`,
+          },
+          body: JSON.stringify({ title: editedTitle }),
+        },
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message);
+
+      // ✅ update UI instantly
+      setProfileData((prev) =>
+        prev
+          ? {
+              ...prev,
+              recentLectures: prev.recentLectures.map((lec) =>
+                lec.lectureId === lectureId
+                  ? { ...lec, title: editedTitle }
+                  : lec,
+              ),
+            }
+          : prev,
+      );
+
+      setEditingId(null);
+    } catch (err) {
+      console.error("Update failed:", err);
+      alert("Failed to update title");
     }
   };
 
@@ -284,11 +331,14 @@ const page = () => {
 
     const fetchUserData = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`, {
-          headers: {
-            Authorization: `Bearer ${session.user.email}`,
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`,
+          {
+            headers: {
+              Authorization: `Bearer ${session?.user?.email}`,
+            },
           },
-        });
+        );
 
         if (!res.ok) {
           console.error("Failed to fetch profile");
@@ -313,7 +363,11 @@ const page = () => {
   }
 
   if (status === "unauthenticated") {
-    return <div><Login /></div>;
+    return (
+      <div>
+        <Login />
+      </div>
+    );
   }
 
   //   Dummy User
@@ -547,9 +601,58 @@ const page = () => {
                           </div>
 
                           <div>
-                            <p className="font-medium text-gray-800 dark:text-white">
+                            {editingId === lecture.lectureId ? (
+                              <div className="flex items-center gap-2">
+                                <input
+                                  value={editedTitle}
+                                  onChange={(e) =>
+                                    setEditedTitle(e.target.value)
+                                  }
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="px-2 py-1 border rounded text-sm dark:bg-gray-800"
+                                />
+
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleUpdateTitle(lecture.lectureId);
+                                  }}
+                                  className="text-green-500 text-xs"
+                                >
+                                  Save
+                                </button>
+
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setEditingId(null);
+                                  }}
+                                  className="text-red-500 text-xs"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-2">
+                                <p className="font-medium text-gray-800 dark:text-white">
+                                  {lecture.title}
+                                </p>
+
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation(); // 🚨 VERY IMPORTANT
+                                    setEditingId(lecture.lectureId);
+                                    setEditedTitle(lecture.title);
+                                  }}
+                                  className="text-gray-400 hover:text-indigo-600 text-xs"
+                                >
+                                  ✏️
+                                </button>
+                              </div>
+                            )}
+                            {/* <p className="font-medium text-gray-800 dark:text-white">
                               {lecture.title}
-                            </p>
+                            </p> */}
                             <p className="text-xs text-gray-400">
                               {new Date(lecture.createdAt).toLocaleDateString()}
                             </p>

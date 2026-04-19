@@ -5,6 +5,7 @@ import {
   getLectureById,
   getLectures,
   updateLectureTitle,
+  getLectureProgress,
 } from "../controllers/lectureController.js";
 import { processPipeline } from "../services/pipelineService.js";
 
@@ -14,6 +15,9 @@ router.post("/", protect, createLecture);
 router.get("/", protect, getLectures);
 router.get("/:id", protect, getLectureById);
 router.patch("/:id", protect, updateLectureTitle);
+
+router.get("/progress/:id", protect, getLectureProgress);
+
 
 router.post("/test-pipeline", async (req, res) => {
   try {

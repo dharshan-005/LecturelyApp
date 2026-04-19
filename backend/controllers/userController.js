@@ -26,14 +26,18 @@ export const getUserProfile = async (req, res) => {
     const now = new Date();
     const last = new Date(user.lastCreditRefresh);
 
-    const diffInDays = Math.floor(
-      (now.getTime() - last.getTime()) / (1000 * 60 * 60 * 24),
-    );
+    // ✅ Compare only DATE (ignore time)
+    const isNewDay =
+      now.getDate() !== last.getDate() ||
+      now.getMonth() !== last.getMonth() ||
+      now.getFullYear() !== last.getFullYear();
 
-    if (diffInDays >= 1) {
+    if (isNewDay) {
       user.stats.creditsRemaining = user.stats.totalCredits;
       user.lastCreditRefresh = now;
       await user.save();
+
+      console.log("✅ Daily credit reset applied");
     }
 
     res.json({

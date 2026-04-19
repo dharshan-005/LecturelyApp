@@ -34,24 +34,24 @@ app.use("/uploads", express.static("uploads"));
 
 app.use("/api/lectures", lectureRoutes);
 
-app.post("/api/generate", async (req, res) => {
-  const { url, lang } = req.body;
+// app.post("/api/generate", async (req, res) => {
+//   const { url, lang } = req.body;
 
-  const PYTHON_API = process.env.PYTHON_API_URL;
+//   const PYTHON_API = process.env.PYTHON_API_URL;
 
-  try {
-    const response = await fetch(
-      `${PYTHON_API}/generate-from-url?url=${url}&target_lang=${lang}`,
-      { method: "POST" },
-    );
+//   try {
+//     const response = await fetch(
+//       `${PYTHON_API}/generate-from-url?url=${url}&target_lang=${lang}`,
+//       { method: "POST" },
+//     );
 
-    const data = await response.json();
+//     const data = await response.json();
 
-    res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to process" });
-  }
-});
+//     res.json(data);
+//   } catch (error) {
+//     res.status(500).json({ error: "Failed to process" });
+//   }
+// });
 
 app.listen(process.env.PORT || 5000, () => {
   console.log(`Server running on port ${process.env.PORT || 5000}`);

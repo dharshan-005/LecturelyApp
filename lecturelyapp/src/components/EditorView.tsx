@@ -24,15 +24,19 @@ interface EditorViewProps {
   isDarkMode: boolean;
   toggleTheme: () => void;
   onSubtitleChange: (id: number, newText: string) => void;
-  onDownload: (format: "srt" | "vtt" | "txt" | "json", mode: ExportMode) => void;
+  onDownload: (
+    format: "srt" | "vtt" | "txt" | "json",
+    mode: ExportMode,
+  ) => void;
   onNewProject: () => void;
-  // summary: string;
-  // loadingSummary: boolean;
   summary: string;
   keyPoints: string[];
   concepts: string[];
-
   videoSrc?: string | null;
+
+  title: string; // ✅ ADDED
+  setTitle: (t: string) => void; // ✅ ADDED
+  lectureId: string | null; // ✅ ADDED
 }
 
 // type ExportMode = "original" | "translated" | "bilingual";
@@ -56,16 +60,19 @@ export const EditorView: React.FC<EditorViewProps> = ({
   keyPoints,
   concepts,
   videoSrc,
+  title,
+  setTitle,
+  lectureId,
 }) => {
   const { data: session } = useSession();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
 
   const router = useRouter();
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const [currentTime, setCurrentTime] = useState(0);
-
-  console.log("SUBTITLE SAMPLE:", subtitles[0]);
 
   const activeSubtitle = subtitles.find(
     (sub) => currentTime >= sub.start && currentTime <= sub.end,
@@ -82,7 +89,38 @@ export const EditorView: React.FC<EditorViewProps> = ({
   const [format, setFormat] = useState<"srt" | "vtt" | "txt" | "json">("srt");
 
   const modes: ExportMode[] = ["original", "translated", "bilingual"];
-  const formats: ("srt" | "vtt" | "txt" | "json")[] = ["srt", "vtt", "txt", "json"];
+  const formats: ("srt" | "vtt" | "txt" | "json")[] = [
+    "srt",
+    "vtt",
+    "txt",
+    "json",
+  ];
+
+  const handleTitleSave = async () => {
+    try {
+      if (!lectureId) return;
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/lectures/${lectureId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user?.email}`,
+          },
+          body: JSON.stringify({ title }),
+        },
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message);
+
+      setIsEditingTitle(false);
+    } catch (err) {
+      console.error("Title update failed", err);
+    }
+  };
 
   useEffect(() => {
     if (activeSubtitle && subtitlerefs.current[activeSubtitle.id]) {
@@ -92,6 +130,12 @@ export const EditorView: React.FC<EditorViewProps> = ({
       });
     }
   }, [activeSubtitle]);
+
+  useEffect(() => {
+    if (subtitles.length > 0) {
+      console.log("SUBTITLE SAMPLE:", subtitles[0]);
+    }
+  }, [subtitles]);
 
   return (
     <>
@@ -110,6 +154,27 @@ export const EditorView: React.FC<EditorViewProps> = ({
               <span className="bg-green-100 w-15.5 md:w-18 dark:bg-indigo-500/10 text-green-700 dark:text-indigo-400 text-[8px] px-2 py-0.5 md:text-[10px] rounded-full font-medium ml-2 border dark:border-indigo-500/20">
                 Editor Mode
               </span>
+              <span className="hidden md:block text-slate-400">/</span>
+
+              {isEditingTitle ? (
+                <input
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  autoFocus
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleTitleSave();
+                    if (e.key === "Escape") setIsEditingTitle(false);
+                  }}
+                  className="text-sm md:text-lg font-semibold px-2 py-1 border rounded dark:bg-slate-800"
+                />
+              ) : (
+                <span
+                  onClick={() => setIsEditingTitle(true)}
+                  className="text-sm md:text-lg font-semibold cursor-pointer hover:text-indigo-500"
+                >
+                  {title || "Untitled Lecture"}
+                </span>
+              )}
             </div>
 
             {/* Right Section */}
@@ -257,9 +322,9 @@ export const EditorView: React.FC<EditorViewProps> = ({
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                  {subtitles.map((sub) => (
+                  {subtitles.map((sub, index) => (
                     <div
-                      key={sub.id}
+                      key={sub.id ?? index}
                       ref={(el) => {
                         subtitlerefs.current[sub.id] = el;
                       }}

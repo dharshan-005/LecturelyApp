@@ -67,7 +67,11 @@ export const UploadView: React.FC<UploadViewProps> = ({
               }
               className="w-full md:w-96 p-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              // onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                console.log("TYPING:", e.target.value);
+                setTitle(e.target.value);
+              }}
               required={status === "authenticated"}
             />
 

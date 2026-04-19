@@ -2,8 +2,6 @@ export const protect = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
-    console.log("AUTH HEADER:", authHeader);
-
     if (!authHeader) {
       return res.status(401).json({ message: "No token" });
     }
@@ -12,7 +10,10 @@ export const protect = (req, res, next) => {
 
     req.user = { email: token };
 
-    console.log("REQ.USER AFTER SET:", req.user);
+    // ✅ Only log in development (optional)
+    if (process.env.NODE_ENV === "development") {
+      console.log("User:", req.user.email);
+    }
 
     next();
   } catch (err) {

@@ -53,6 +53,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [isFromBackend, setIsFromBackend] = useState(false);
 
   const [title, setTitle] = useState("");
+  // const [title, setTitle] = useState(() => {
+  //   if (typeof window !== "undefined") {
+  //     return localStorage.getItem("title") || "Lecture";
+  //   }
+  //   return "";
+  // });
 
   useLayoutEffect(() => {
     if (isFromBackend) return; // 🚨 STOP override
@@ -67,6 +73,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
     setHydrated(true);
   }, [isFromBackend]);
+
+  useEffect(() => {
+    const storedTitle = localStorage.getItem("title");
+    if (storedTitle) {
+      setTitle(storedTitle);
+    }
+  }, []);
 
   useEffect(() => {
     if (videoUrl) {
@@ -110,10 +123,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("theme", newTheme ? "dark" : "light");
   };
 
-  useEffect(() => {
-    const storedTitle = localStorage.getItem("title");
-    if (storedTitle) setTitle(storedTitle);
-  }, []);
+  // useEffect(() => {
+  //   const storedTitle = localStorage.getItem("title");
+  //   if (storedTitle) setTitle(storedTitle);
+  // }, []);
 
   useEffect(() => {
     localStorage.setItem("title", title);

@@ -4,7 +4,13 @@ const subtitleSchema = new mongoose.Schema(
   {
     start: { type: Number, required: true },
     end: { type: Number, required: true },
-    text: { type: String, required: true },
+
+    // ✅ NEW FIELDS (CRITICAL)
+    original: { type: String, default: "" },
+    translated: { type: String, default: "" },
+
+    // (optional fallback for old data)
+    text: { type: String },
   },
   { _id: false },
 );
@@ -52,6 +58,22 @@ const lectureSchema = new mongoose.Schema(
       summary: String,
       keyPoints: [String],
       importantConcepts: [String],
+    },
+
+    processing: {
+      progress: {
+        type: Number,
+        default: 0,
+      },
+      stage: {
+        type: String,
+        default: "Starting...",
+      },
+      status: {
+        type: String,
+        enum: ["processing", "completed", "failed"],
+        default: "processing",
+      },
     },
   },
   { timestamps: true },

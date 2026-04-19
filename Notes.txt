@@ -38,3 +38,570 @@ It should be affordable for students.
 --- Additional ---
 Extension to browsers -
 Notes generation from video -
+
+
+////////////////////////////////////////////////////
+
+PS C:\Users\vkdha\OneDrive\Documents\Desktop\LecturelyAI> cd .\backend\
+PS C:\Users\vkdha\OneDrive\Documents\Desktop\LecturelyAI\backend> npm start
+
+> backend@1.0.0 start
+> node server.js
+
+[dotenv@17.2.3] injecting env (5) from .env -- tip: ⚙️  override existing env vars with { override: true }
+Refinement service loaded
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+Server running on port 5000
+MongoDB connected successfully
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+User: { email: 'test3@test.com' }
+DB User: {
+  stats: {
+    subtitlesGenerated: 6,
+    translationsDone: 6,
+    minutesProcessed: 20.5,
+    languagesUsed: 1,
+    creditsRemaining: 7,
+    totalCredits: 10
+  },
+  _id: new ObjectId('69ca839d50869dd6708bc8ee'),
+  email: 'test3@test.com',
+  userName: 'Tester3',
+  password: '$2b$10$mVOM/oQqxiqMOMxiQ2FzaeUYcT/6icaBWsaBK4nUuCKnhytIMrrLi',
+  oauth: false,
+  recentLectures: [
+    {
+      lectureId: new ObjectId('69df4718973ef5e57c8d029b'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-15T08:06:48.095Z
+    },
+    {
+      lectureId: new ObjectId('69ddf9bd495437f9963bcf7b'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-14T08:24:29.148Z
+    },
+    {
+      lectureId: new ObjectId('69ddf51686ed7002961ad30f'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-14T08:04:38.836Z
+    }
+  ],
+  createdAt: 2026-03-30T14:07:25.621Z,
+  updatedAt: 2026-04-15T08:06:48.379Z,
+  __v: 6,
+  lastResetDate: 2026-04-14T07:42:32.985Z,
+  plan: 'Free Plan',
+  lastCreditRefresh: 2026-04-15T07:45:33.154Z
+}
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+User: { email: 'test3@test.com' }
+DB User: {
+  stats: {
+    subtitlesGenerated: 6,
+    translationsDone: 6,
+    minutesProcessed: 20.5,
+    languagesUsed: 1,
+    creditsRemaining: 7,
+    totalCredits: 10
+  },
+  _id: new ObjectId('69ca839d50869dd6708bc8ee'),
+  email: 'test3@test.com',
+  userName: 'Tester3',
+  password: '$2b$10$mVOM/oQqxiqMOMxiQ2FzaeUYcT/6icaBWsaBK4nUuCKnhytIMrrLi',
+  oauth: false,
+  recentLectures: [
+    {
+      lectureId: new ObjectId('69df4718973ef5e57c8d029b'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-15T08:06:48.095Z
+    },
+    {
+      lectureId: new ObjectId('69ddf9bd495437f9963bcf7b'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-14T08:24:29.148Z
+    },
+    {
+      lectureId: new ObjectId('69ddf51686ed7002961ad30f'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-14T08:04:38.836Z
+    }
+  ],
+  createdAt: 2026-03-30T14:07:25.621Z,
+  updatedAt: 2026-04-15T08:06:48.379Z,
+  __v: 6,
+  lastResetDate: 2026-04-14T07:42:32.985Z,
+  plan: 'Free Plan',
+  lastCreditRefresh: 2026-04-15T07:45:33.154Z
+}
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+User: { email: 'test3@test.com' }
+DB User: {
+  stats: {
+    subtitlesGenerated: 6,
+    translationsDone: 6,
+    minutesProcessed: 20.5,
+    languagesUsed: 1,
+    creditsRemaining: 7,
+    totalCredits: 10
+  },
+  _id: new ObjectId('69ca839d50869dd6708bc8ee'),
+  email: 'test3@test.com',
+  userName: 'Tester3',
+  password: '$2b$10$mVOM/oQqxiqMOMxiQ2FzaeUYcT/6icaBWsaBK4nUuCKnhytIMrrLi',
+  oauth: false,
+  recentLectures: [
+    {
+      lectureId: new ObjectId('69df4718973ef5e57c8d029b'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-15T08:06:48.095Z
+    },
+    {
+      lectureId: new ObjectId('69ddf9bd495437f9963bcf7b'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-14T08:24:29.148Z
+    },
+    {
+      lectureId: new ObjectId('69ddf51686ed7002961ad30f'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-14T08:04:38.836Z
+    }
+  ],
+  createdAt: 2026-03-30T14:07:25.621Z,
+  updatedAt: 2026-04-15T08:06:48.379Z,
+  __v: 6,
+  lastResetDate: 2026-04-14T07:42:32.985Z,
+  plan: 'Free Plan',
+  lastCreditRefresh: 2026-04-15T07:45:33.154Z
+}
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+User: { email: 'test3@test.com' }
+DB User: {
+  stats: {
+    subtitlesGenerated: 6,
+    translationsDone: 6,
+    minutesProcessed: 20.5,
+    languagesUsed: 1,
+    creditsRemaining: 7,
+    totalCredits: 10
+  },
+  _id: new ObjectId('69ca839d50869dd6708bc8ee'),
+  email: 'test3@test.com',
+  userName: 'Tester3',
+  password: '$2b$10$mVOM/oQqxiqMOMxiQ2FzaeUYcT/6icaBWsaBK4nUuCKnhytIMrrLi',
+  oauth: false,
+  recentLectures: [
+    {
+      lectureId: new ObjectId('69df4718973ef5e57c8d029b'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-15T08:06:48.095Z
+    },
+    {
+      lectureId: new ObjectId('69ddf9bd495437f9963bcf7b'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-14T08:24:29.148Z
+    },
+    {
+      lectureId: new ObjectId('69ddf51686ed7002961ad30f'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-14T08:04:38.836Z
+    }
+  ],
+  createdAt: 2026-03-30T14:07:25.621Z,
+  updatedAt: 2026-04-15T08:06:48.379Z,
+  __v: 6,
+  lastResetDate: 2026-04-14T07:42:32.985Z,
+  plan: 'Free Plan',
+  lastCreditRefresh: 2026-04-15T07:45:33.154Z
+}
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+User: { email: 'test3@test.com' }
+DB User: {
+  stats: {
+    subtitlesGenerated: 6,
+    translationsDone: 6,
+    minutesProcessed: 20.5,
+    languagesUsed: 1,
+    creditsRemaining: 7,
+    totalCredits: 10
+  },
+  _id: new ObjectId('69ca839d50869dd6708bc8ee'),
+  email: 'test3@test.com',
+  userName: 'Tester3',
+  password: '$2b$10$mVOM/oQqxiqMOMxiQ2FzaeUYcT/6icaBWsaBK4nUuCKnhytIMrrLi',
+  oauth: false,
+  recentLectures: [
+    {
+      lectureId: new ObjectId('69df4718973ef5e57c8d029b'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-15T08:06:48.095Z
+    },
+    {
+      lectureId: new ObjectId('69ddf9bd495437f9963bcf7b'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-14T08:24:29.148Z
+    },
+    {
+      lectureId: new ObjectId('69ddf51686ed7002961ad30f'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-14T08:04:38.836Z
+    }
+  ],
+  createdAt: 2026-03-30T14:07:25.621Z,
+  updatedAt: 2026-04-15T08:06:48.379Z,
+  __v: 6,
+  lastResetDate: 2026-04-14T07:42:32.985Z,
+  plan: 'Free Plan',
+  lastCreditRefresh: 2026-04-15T07:45:33.154Z
+}
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+User: { email: 'test3@test.com' }
+DB User: {
+  stats: {
+    subtitlesGenerated: 6,
+    translationsDone: 6,
+    minutesProcessed: 20.5,
+    languagesUsed: 1,
+    creditsRemaining: 7,
+    totalCredits: 10
+  },
+  _id: new ObjectId('69ca839d50869dd6708bc8ee'),
+  email: 'test3@test.com',
+  userName: 'Tester3',
+  password: '$2b$10$mVOM/oQqxiqMOMxiQ2FzaeUYcT/6icaBWsaBK4nUuCKnhytIMrrLi',
+  oauth: false,
+  recentLectures: [
+    {
+      lectureId: new ObjectId('69df4718973ef5e57c8d029b'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-15T08:06:48.095Z
+    },
+    {
+      lectureId: new ObjectId('69ddf9bd495437f9963bcf7b'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-14T08:24:29.148Z
+    },
+    {
+      lectureId: new ObjectId('69ddf51686ed7002961ad30f'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-14T08:04:38.836Z
+    }
+  ],
+  createdAt: 2026-03-30T14:07:25.621Z,
+  updatedAt: 2026-04-15T08:06:48.379Z,
+  __v: 6,
+  lastResetDate: 2026-04-14T07:42:32.985Z,
+  plan: 'Free Plan',
+  lastCreditRefresh: 2026-04-15T07:45:33.154Z
+}
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+User: { email: 'test3@test.com' }
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+DB User: {
+  stats: {
+    subtitlesGenerated: 6,
+    translationsDone: 6,
+    minutesProcessed: 20.5,
+    languagesUsed: 1,
+    creditsRemaining: 7,
+    totalCredits: 10
+  },
+  _id: new ObjectId('69ca839d50869dd6708bc8ee'),
+  email: 'test3@test.com',
+  userName: 'Tester3',
+  password: '$2b$10$mVOM/oQqxiqMOMxiQ2FzaeUYcT/6icaBWsaBK4nUuCKnhytIMrrLi',
+  oauth: false,
+  recentLectures: [
+    {
+      lectureId: new ObjectId('69df4718973ef5e57c8d029b'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-15T08:06:48.095Z
+    },
+    {
+      lectureId: new ObjectId('69ddf9bd495437f9963bcf7b'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-14T08:24:29.148Z
+    },
+    {
+      lectureId: new ObjectId('69ddf51686ed7002961ad30f'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-14T08:04:38.836Z
+    }
+  ],
+  createdAt: 2026-03-30T14:07:25.621Z,
+  updatedAt: 2026-04-15T08:06:48.379Z,
+  __v: 6,
+  lastResetDate: 2026-04-14T07:42:32.985Z,
+  plan: 'Free Plan',
+  lastCreditRefresh: 2026-04-15T07:45:33.154Z
+}
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+LOOKING FOR USER EMAIL: test3@test.com
+Starting AI pipeline...
+Step 1: Transcription
+Pipeline Error: Audio conversion failed
+Create Lecture Error: Audio conversion failed
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+Language from frontend: ta
+Whisper finished running
+Sending batch to Gemini...
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+LOOKING FOR USER EMAIL: test3@test.com
+Starting AI pipeline...
+Step 1: Transcription
+Step 2: Context Extraction
+📘 CONTEXT EXTRACTION STARTED
+🧠 GEMINI CONTEXT RAW: ```json
+{
+  "topic": "Artificial Intelligence: Transformation, Applications, and Ethical Considerations",
+  "keywords": [
+    "Artificial intelligence",
+    "Algorithmic bias",
+    "Data privacy",
+    "Adaptive learning systems",
+    "Automation"
+  ]
+}
+```
+✅ FINAL CONTEXT: {
+  topic: 'Artificial Intelligence: Transformation, Applications, and Ethical Considerations',
+  keywords: [
+    'Artificial intelligence',
+    'Algorithmic bias',
+    'Data privacy',
+    'Adaptive learning systems',
+    'Automation'
+  ]
+}
+Step 3: Refinement
+Refinement function called
+🔹 RAW TRANSCRIPT: Artificial intelligence has quietly transformed from a futurist concept into an everyday companion, reshaping how humans live, learn, and work in ways that were unimaginable just a decade ago. At its core, AI is about enabling machines to mimic human intelligence, learning from data, recognizing patterns, and making decisions. But its real impact lies in how seamlessly it integrates into daily life. From personalized recommendations on streaming platforms to voice assistance that manage schedules and answer questions, AI has become an invisible layer supporting modern convenience. In education, it opens doors to adaptive learning systems that adjust content based on a student's pace and understanding, making learning more inclusive and effective. Healthcare has also benefited enormously, with AI-powered tools assisting doctors in diagnosing diseases earlier, analyzing medical images with high precision, and even predicting potential health risks before symptoms appear. Beyond these practical uses, AI is influencing creativity itself. Artists, writers, and musicians are now collaborating with intelligent tools to generate ideas, explore new styles, and push the boundaries of expression. However, this rapid advancement also raises important ethical and social questions. Concerns about data privacy, algorithmic bias, and job displacement remind us that technology is never neutral. It reflects the values and intentions of those who design and deploy it. As automation increases efficiency, societies must focus on reskilling and upskilling people to work alongside intelligent systems rather than be replaced by them. Transparency and responsible development are crucial to ensure AI benefits everyone, not just a select few. Ultimately, artificial intelligence is not merely a technological evolution. It is a mirror that reflects human ambition, creativity, and responsibility. How we choose to guide its growth will determine whether it becomes a tool for empowerment and progress, or a source of division and inequality. By approaching AI with curiosity, caution, and ethical awareness, humanity has the opportunity to shape a future where intelligent machines amplify human potential instead of overshadowing it.
+🧠 GEMINI RAW RESPONSE: Artificial intelligence has rapidly evolved from a speculative futuristic concept into an integral part of our daily lives. In just a decade, it has fundamentally reshaped how humans live, learn, and work in previously unimaginable ways.
+
+Fundamentally, AI empowers machines to emulate human intelligence by learning from vast datasets, recognizing complex patterns, and making informed decisions. Its profound impact, however, stems from its seamless integration into our everyday routines. Whether it's the personalized recommendations we receive on streaming platforms or the voice assistants that manage our schedules and answer queries, AI functions as an invisible, underlying layer facilitating modern convenience.
+
+In the realm of education, AI has ushered in adaptive learning systems. These systems dynamically adjust content and pace based on an individual student's comprehension, thereby making learning more inclusive and significantly more effective. Healthcare, too, has experienced enormous benefits. AI-powered tools now assist doctors in earlier disease diagnosis, analyze complex medical images with remarkable precision, and can even predict potential health risks long before symptoms manifest. Beyond these critical practical applications, AI is increasingly influencing the very fabric of human creativity. Artists, writers, and musicians are collaborating with intelligent tools to generate novel ideas, explore new stylistic avenues, and ultimately push the boundaries of artistic expression.
+
+However, this rapid and expansive advancement of AI inevitably brings forth significant ethical and social considerations. Concerns surrounding data privacy, the potential for algorithmic bias, and the challenge of job displacement serve as crucial reminders that technology is never a neutral force. Instead, it inherently reflects the values, intentions, and perspectives of those who design and deploy it. As automation continues to drive efficiency, societies must proactively invest in reskilling and upskilling their workforces, enabling people to collaborate effectively with intelligent systems rather than face replacement. To ensure AI's benefits are broadly distributed and not limited to a select few, principles of transparency, accountability, and responsible development are absolutely crucial.
+
+Ultimately, artificial intelligence represents far more than just a technological evolution. It serves as a powerful mirror, reflecting our collective human ambition, creativity, and, most critically, our responsibility. The trajectory we choose to guide its growth will decisively determine whether AI becomes a formidable tool for empowerment and progress, or tragically, a source of division and inequality. By approaching AI with a blend of curiosity, caution, and unwavering ethical awareness, humanity has an unparalleled opportunity to shape a future where intelligent machines amplify human potential, rather than overshadowing it.
+✅ REFINED OUTPUT: Artificial intelligence has rapidly evolved from a speculative futuristic concept into an integral part of our daily lives. In just a decade, it has fundamentally reshaped how humans live, learn, and work in previously unimaginable ways.
+
+Fundamentally, AI empowers machines to emulate human intelligence by learning from vast datasets, recognizing complex patterns, and making informed decisions. Its profound impact, however, stems from its seamless integration into our everyday routines. Whether it's the personalized recommendations we receive on streaming platforms or the voice assistants that manage our schedules and answer queries, AI functions as an invisible, underlying layer facilitating modern convenience.
+
+In the realm of education, AI has ushered in adaptive learning systems. These systems dynamically adjust content and pace based on an individual student's comprehension, thereby making learning more inclusive and significantly more effective. Healthcare, too, has experienced enormous benefits. AI-powered tools now assist doctors in earlier disease diagnosis, analyze complex medical images with remarkable precision, and can even predict potential health risks long before symptoms manifest. Beyond these critical practical applications, AI is increasingly influencing the very fabric of human creativity. Artists, writers, and musicians are collaborating with intelligent tools to generate novel ideas, explore new stylistic avenues, and ultimately push the boundaries of artistic expression.
+
+However, this rapid and expansive advancement of AI inevitably brings forth significant ethical and social considerations. Concerns surrounding data privacy, the potential for algorithmic bias, and the challenge of job displacement serve as crucial reminders that technology is never a neutral force. Instead, it inherently reflects the values, intentions, and perspectives of those who design and deploy it. As automation continues to drive efficiency, societies must proactively invest in reskilling and upskilling their workforces, enabling people to collaborate effectively with intelligent systems rather than face replacement. To ensure AI's benefits are broadly distributed and not limited to a select few, principles of transparency, accountability, and responsible development are absolutely crucial.
+
+Ultimately, artificial intelligence represents far more than just a technological evolution. It serves as a powerful mirror, reflecting our collective human ambition, creativity, and, most critically, our responsibility. The trajectory we choose to guide its growth will decisively determine whether AI becomes a formidable tool for empowerment and progress, or tragically, a source of division and inequality. By approaching AI with a blend of curiosity, caution, and unwavering ethical awareness, humanity has an unparalleled opportunity to shape a future where intelligent machines amplify human potential, rather than overshadowing it.
+Step 4: Translation
+🌍 TRANSLATION STARTED
+🧠 GEMINI TRANSLATION RAW: ```json
+[
+  "செயற்கை நுண்ணறிவு, ஒரு பத்தாண்டுகளுக்கு முன்பு கற்பனை செய்ய முடியாத வகையில் மனிதர்களின் வாழ்க்கை, கற்றல், வேலை செய்யும் முறைகளை மாற்றியமைத்து, ஒரு எதிர்காலக் கருத்தாக இருந்து அன்றாடத் துணையாக அமைதியாக உருவெடுத்துள்ள                          ளது.",
+  "அதன் மையத்தில், தரவுகளிலிருந்து கற்றுக்கொண்டு, வடிவங்களை அடையாளம் கண்டு, முடிவுகளை எடுப்பதன் மூலம் மனித அறிவைப் பிரதிபலிக்கும் திறனை இயந்திரங்களுக்கு அளிப்பதே செயற்கை நுண்ணறிவு.",
+  "ஆனால், அன்றாட வாழ்க்கையில் அது எவ்வளவு தடையின்றி ஒருங்கிணைக்கப்பட்டுள்ளது என்பதில்தான் அதன் உண்மையான தாக்கம் அடங்கியுள்ளது.",
+  "ஸ்ட்ரீமிங் தளங்களில் தனிப்பயனாக்கப்பட்ட பரிந்துரைகள் முதல், அட்டவணைகளை நிர்வகித்து கேள்விகளுக்கு பதிலளிக்கும் குரல் உதவிகள் வரை, செயற்கை நுண்ணறிவு நவீன வசதிகளுக்கு ஆதரவளிக்கும் ஒரு கண்ணுக்குத் தெரியாத அடுக்காக மாறிய                               யுள்ளது.",
+  "கல்வியில், ஒரு மாணவரின் கற்றல் வேகம் மற்றும் புரிதலுக்கு ஏற்ப உள்ளடக்கத்தை சரிசெய்யும் தகவமைப்பு கற்றல் அமைப்புகளுக்கு இது வழி வகுக்கிறது, கற்றலை மேலும் உள்ளடக்கியதாகவும் பயனுள்ளதாகவும் மாற்றுகிறது.",
+  "செயற்கை நுண்ணறிவு ஆற்றல் கொண்ட கருவிகள் மருத்துவர்களுக்கு நோய்களை முன்னதாகவே கண்டறியவும், மருத்துவப் படங்களை மிகத் துல்லியமாக பகுப்பாய்வு செய்யவும், அறிகுறிகள் தோன்றுவதற்கு முன்பே சாத்தியமான சுகாதார அபாயங்களைக் கணிக                            க்கவும் உதவுவதன் மூலம் சுகாதாரப் பாதுகாப்பும் பெரும் அளவில் பயனடைந்துள்ளது.",
+  "இந்த நடைமுறைப் பயன்பாடுகளுக்கு அப்பால், செயற்கை நுண்ணறிவு படைப்பாற்றலிலும் தாக்கத்தை ஏற்படுத்துகிறது.",
+  "கலைஞர்கள், எழுத்தாளர்கள் மற்றும் இசைக்கலைஞர்கள் இப்போது அறிவார்ந்த கருவிகளுடன் இணைந்து கருத்துக்களை உருவாக்கவும், புதிய பாணிகளை ஆராயவும், வெளிப்பாட்டின் எல்லைகளைத் தள்ளவும் செயல்படுகின்றனர்.",
+  "இருப்பினும், இந்த விரைவான முன்னேற்றம் முக்கியமான நெறிமுறை மற்றும் சமூக கேள்விகளையும் எழுப்புகிறது.",
+  "தரவு தனியுரிமை, அல்காரிதமிக் சார்பு மற்றும் வேலை இடப்பெயர்வு பற்றிய கவலைகள், தொழில்நுட்பம் ஒருபோதும் நடுநிலையானது அல்ல என்பதை நமக்கு நினைவூட்டுகின்றன.",
+  "அதை வடிவமைத்து, பயன்படுத்துபவர்களின் மதிப்புகள் மற்றும் நோக்கங்களையே அது பிரதிபலிக்கிறது.",
+  "தானியங்குமயமாக்கல் செயல்திறனை அதிகரிக்கும் போது, சமூகங்கள் மக்களை அறிவார்ந்த அமைப்புகளால் மாற்றப்படுவதை விட, அவற்றுடன் இணைந்து பணியாற்ற மீண்டும் திறன்படுத்துவதிலும், திறன்களை மேம்படுத்துவதிலும் கவனம் செலுத்த வேண்டும                               ம்.",
+  "வெளிப்படைத்தன்மை மற்றும் பொறுப்பான மேம்பாடு, செயற்கை நுண்ணறிவு ஒரு சிலருக்கு மட்டுமல்லாமல் அனைவருக்கும் பயனளிப்பதை உறுதிப்படுத்த மிக முக்கியம்.",
+  "இறுதியாக, செயற்கை நுண்ணறிவு ஒரு தொழில்நுட்ப பரிணாமம் மட்டுமல்ல.",
+  "அது மனித லட்சியம், படைப்பாற்றல் மற்றும் பொறுப்பைப் பிரதிபலிக்கும் ஒரு கண்ணாடி.",
+  "அதன் வளர்ச்சியை நாம் எப்படி வழிநடத்தத் தேர்வு செய்கிறோம் என்பது, அது அதிகாரமளித்தல் மற்றும் முன்னேற்றத்திற்கான கருவியாக மாறுகிறதா அல்லது பிளவு மற்றும் சமத்துவமின்மையின் மூலமாக மாறுகிறதா என்பதைத் தீர்மானிக்கும்.",   
+  "ஆர்வம், எச்சரிக்கை மற்றும் நெறிமுறை விழிப்புணர்வுடன் செயற்கை நுண்ணறிவை அணுகுவதன் மூலம், அறிவார்ந்த இயந்திரங்கள் மனிதத் திறனை மூழ்கடிப்பதற்குப் பதிலாக மேம்படுத்தும் ஒரு எதிர்காலத்தை வடிவமைக்க மனிதகுலத்திற்கு வாய்ப்பு                                ு உள்ளது."
+]
+```
+✅ TRANSLATION COMPLETE
+Step 5: Notes Generation
+📝 NOTES GENERATION STARTED
+🧠 GEMINI NOTES RAW: ```json
+{
+  "summary": "Artificial intelligence has rapidly evolved, becoming integral to daily life by empowering machines to emulate human intelligence and learn from data. It seamlessly integrates into our routines, transforming sectors like education through adaptive learning and healthcare with advanced diagnostic tools, and even influencing creativity. However, its rapid advancement brings critical ethical and social challenges, including data privacy, algorithmic bias, and potential job displacement. Responsible development, guided by transparency and accountability, is crucial to ensure AI amplifies human potential and fosters progress rather than inequality.",
+  "keyPoints": [
+    "AI has rapidly evolved, fundamentally reshaping how humans live, learn, and work.",
+    "AI empowers machines to emulate human intelligence by learning from vast datasets and recognizing patterns.",
+    "It is seamlessly integrated into daily routines, providing personalized recommendations and voice assistant functionalities.",
+    "AI has introduced adaptive learning systems in education, adjusting content based on individual student comprehension.",
+    "In healthcare, AI assists with earlier disease diagnosis, precise medical image analysis, and health risk prediction.",
+    "AI is influencing human creativity, enabling collaboration between artists and intelligent tools.",
+    "The advancement of AI raises significant ethical and social considerations, including data privacy, algorithmic bias, and job displacement.",
+    "Societies must proactively invest in reskilling and upskilling workforces to enable collaboration with intelligent systems.",
+    "Principles of transparency, accountability, and responsible development are crucial for broadly distributing AI's benefits.",
+    "AI's trajectory, whether for empowerment or division, depends on how humanity guides its growth with ethical awareness."
+  ],
+  "importantConcepts": [
+    "Artificial intelligence (AI)",
+    "Human intelligence emulation",
+    "Adaptive learning systems",
+    "Algorithmic bias",
+    "Data privacy",
+    "Job displacement",
+    "Reskilling",
+    "Upskilling",
+    "Transparency",
+    "Accountability",
+    "Responsible development"
+  ]
+}
+```
+✅ FINAL NOTES: {
+  summary: 'Artificial intelligence has rapidly evolved, becoming integral to daily life by empowering machines to emulate human intelligence and learn from data. It seamlessly integrates into our routines, transforming sectors like education through adaptive learning and healthcare with advanced diagnostic tools, and even influencing creativity. However, its rapid advancement brings critical ethical and social challenges, including data privacy, algorithmic bias, and potential job displacement. Responsible development, guided by transparency and accountability, is crucial to ensure AI amplifies human potential and fosters progress rather than inequality.',
+  keyPoints: [
+    'AI has rapidly evolved, fundamentally reshaping how humans live, learn, and work.',
+    'AI empowers machines to emulate human intelligence by learning from vast datasets and recognizing patterns.',
+    'It is seamlessly integrated into daily routines, providing personalized recommendations and voice assistant functionalities.',
+    'AI has introduced adaptive learning systems in education, adjusting content based on individual student comprehension.',
+    'In healthcare, AI assists with earlier disease diagnosis, precise medical image analysis, and health risk prediction.',
+    'AI is influencing human creativity, enabling collaboration between artists and intelligent tools.',
+    'The advancement of AI raises significant ethical and social considerations, including data privacy, algorithmic bias, and job displacement.',
+    'Societies must proactively invest in reskilling and upskilling workforces to enable collaboration with intelligent systems.',
+    "Principles of transparency, accountability, and responsible development are crucial for broadly distributing AI's benefits.",
+    "AI's trajectory, whether for empowerment or division, depends on how humanity guides its growth with ethical awareness."
+  ],
+  importantConcepts: [
+    'Artificial intelligence (AI)',
+    'Human intelligence emulation',
+    'Adaptive learning systems',
+    'Algorithmic bias',
+    'Data privacy',
+    'Job displacement',
+    'Reskilling',
+    'Upskilling',
+    'Transparency',
+    'Accountability',
+    'Responsible development'
+  ]
+}
+Pipeline completed
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+User: { email: 'test3@test.com' }
+DB User: {
+  stats: {
+    subtitlesGenerated: 7,
+    translationsDone: 7,
+    minutesProcessed: 23.916666666666668,
+    languagesUsed: 1,
+    creditsRemaining: 6,
+    totalCredits: 10
+  },
+  _id: new ObjectId('69ca839d50869dd6708bc8ee'),
+  email: 'test3@test.com',
+  userName: 'Tester3',
+  password: '$2b$10$mVOM/oQqxiqMOMxiQ2FzaeUYcT/6icaBWsaBK4nUuCKnhytIMrrLi',
+  oauth: false,
+  recentLectures: [
+    {
+      lectureId: new ObjectId('69dfad826b5901b45824ce73'),
+      title: 'Untitled Lecture',
+      createdAt: 2026-04-15T15:23:46.319Z
+    },
+    {
+      lectureId: new ObjectId('69df4718973ef5e57c8d029b'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-15T08:06:48.095Z
+    },
+    {
+      lectureId: new ObjectId('69ddf9bd495437f9963bcf7b'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-14T08:24:29.148Z
+    },
+    {
+      lectureId: new ObjectId('69ddf51686ed7002961ad30f'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-14T08:04:38.836Z
+    }
+  ],
+  createdAt: 2026-03-30T14:07:25.621Z,
+  updatedAt: 2026-04-15T15:23:46.416Z,
+  __v: 7,
+  lastResetDate: 2026-04-14T07:42:32.985Z,
+  plan: 'Free Plan',
+  lastCreditRefresh: 2026-04-15T07:45:33.154Z
+}
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }
+User: { email: 'test3@test.com' }
+DB User: {
+  stats: {
+    subtitlesGenerated: 7,
+    translationsDone: 7,
+    minutesProcessed: 23.916666666666668,
+    languagesUsed: 1,
+    creditsRemaining: 6,
+    totalCredits: 10
+  },
+  _id: new ObjectId('69ca839d50869dd6708bc8ee'),
+  email: 'test3@test.com',
+  userName: 'Tester3',
+  password: '$2b$10$mVOM/oQqxiqMOMxiQ2FzaeUYcT/6icaBWsaBK4nUuCKnhytIMrrLi',
+  oauth: false,
+  recentLectures: [
+    {
+      lectureId: new ObjectId('69dfad826b5901b45824ce73'),
+      title: 'Untitled Lecture',
+      createdAt: 2026-04-15T15:23:46.319Z
+    },
+    {
+      lectureId: new ObjectId('69df4718973ef5e57c8d029b'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-15T08:06:48.095Z
+    },
+    {
+      lectureId: new ObjectId('69ddf9bd495437f9963bcf7b'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-14T08:24:29.148Z
+    },
+    {
+      lectureId: new ObjectId('69ddf51686ed7002961ad30f'),
+      title: 'Sample_Aud.mp4',
+      createdAt: 2026-04-14T08:04:38.836Z
+    }
+  ],
+  createdAt: 2026-03-30T14:07:25.621Z,
+  updatedAt: 2026-04-15T15:23:46.416Z,
+  __v: 7,
+  lastResetDate: 2026-04-14T07:42:32.985Z,
+  plan: 'Free Plan',
+  lastCreditRefresh: 2026-04-15T07:45:33.154Z
+}
+AUTH HEADER: Bearer test3@test.com
+REQ.USER AFTER SET: { email: 'test3@test.com' }

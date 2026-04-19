@@ -17,9 +17,13 @@ async function callGemini(prompt) {
 
       return response.text;
     } catch (err) {
-      if (err.status === 503 && i < maxRetries - 1) {
-        console.log("Gemini overloaded, retrying...");
-        await new Promise((res) => setTimeout(res, 3000));
+      if ((err.status === 503 || err.status === 429) && i < maxRetries - 1) {
+        console.log("Gemini busy/quota hit, retrying...");
+
+        // ⏳ wait longer for 429
+        const delay = err.status === 429 ? 10000 : 3000;
+
+        await new Promise((res) => setTimeout(res, delay));
       } else {
         throw err;
       }
@@ -52,7 +56,23 @@ Lecture Content:
 ${refinedText}
 `;
 
-    const result = await callGemini(prompt);
+    // const result = await callGemini(prompt);
+    let result;
+
+    try {
+      result = await callGemini(prompt);
+    } catch (err) {
+      if (err.status === 429) {
+        console.warn("Quota exceeded — fallback context");
+
+        return {
+          summary: "Not available (quota exceeded)",
+          keyPoints: [],
+          importantConcepts: [],
+        };
+      }
+      throw err;
+    }
 
     console.log("🧠 GEMINI NOTES RAW:", result);
 

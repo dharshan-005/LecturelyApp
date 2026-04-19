@@ -41,7 +41,7 @@ export const createLecture = async (req, res) => {
     // 🚫 4. Prevent duplicates
     const existingLecture = await Lecture.findOne({
       user: user._id,
-      title: title.trim(),
+      title: finalTitle,
       createdAt: {
         $gte: new Date(Date.now() - 5 * 60 * 1000),
       },
@@ -52,32 +52,25 @@ export const createLecture = async (req, res) => {
     }
 
     // 🔥 5. PROCESS PIPELINE (CORE PART)
+    // ✅ 5. Create lecture FIRST (before pipeline)
     console.log("Starting AI pipeline...");
     // ✅ TEMP TEST
-    const language = targetLang || "ta";
-    // const audioPath = "uploads/test2.mp4";
-    // const pipelineResult = await processPipeline(audioPath, language);
-
-    const pipelineResult = await processPipeline(videoUrl, language);
-
-    const { rawTranscript, refined, translated, context, notes } =
-      pipelineResult;
-
-    console.log("Pipeline completed");
-
-    // ✅ 6. Create lecture
     const lecture = await Lecture.create({
       user: user._id,
-      title: title.trim(),
+      title: finalTitle,
       duration,
-      content: refined, // refined transcript
-      subtitles: rawTranscript || [],
-      translatedSubtitles: translated || [],
-      contextData: context || {}, // optional (good for future)
-      notes: notes || {}, // optional (good for future)
+      processing: {
+        progress: 0,
+        stage: "Starting...",
+        status: "processing",
+      },
     });
 
-    // 🔁 7. Update stats
+    // 🔥 6. Start pipeline (DO NOT await)
+    const language = targetLang || "ta";
+    processPipeline(lecture._id, videoUrl, language);
+
+    // 🔁 7. Update stats immediately (optional — your choice)
     user.stats.subtitlesGenerated += 1;
     user.stats.translationsDone += 1;
 
@@ -87,7 +80,6 @@ export const createLecture = async (req, res) => {
     user.stats.languagesUsed = Math.max(user.stats.languagesUsed, 1);
     user.stats.creditsRemaining -= 1;
 
-    // 🧾 8. Update recent lectures
     user.recentLectures.unshift({
       lectureId: lecture._id,
       title: lecture.title,
@@ -100,13 +92,65 @@ export const createLecture = async (req, res) => {
 
     await user.save();
 
-    // ✅ 9. Response
+    // ✅ 8. Return immediately
     res.status(201).json({
-      message: "Lecture created successfully",
-      lecture,
-      stats: user.stats,
-      recentLectures: user.recentLectures,
+      message: "Processing started",
+      lectureId: lecture._id,
     });
+
+    // const language = targetLang || "ta";
+    // // const audioPath = "uploads/test2.mp4";
+    // // const pipelineResult = await processPipeline(audioPath, language);
+
+    // const pipelineResult = await processPipeline(videoUrl, language);
+
+    // const { rawTranscript, refined, translated, context, notes } =
+    //   pipelineResult;
+
+    // console.log("Pipeline completed");
+
+    // // ✅ 6. Create lecture
+    // const lecture = await Lecture.create({
+    //   user: user._id,
+    //   title: finalTitle,
+    //   duration,
+    //   content: refined, // refined transcript
+    //   subtitles: rawTranscript || [],
+    //   translatedSubtitles: translated || [],
+    //   contextData: context || {}, // optional (good for future)
+    //   notes: notes || {}, // optional (good for future)
+    // });
+
+    // // 🔁 7. Update stats
+    // user.stats.subtitlesGenerated += 1;
+    // user.stats.translationsDone += 1;
+
+    // const minutes = duration ? duration / 60 : 1;
+    // user.stats.minutesProcessed += minutes;
+
+    // user.stats.languagesUsed = Math.max(user.stats.languagesUsed, 1);
+    // user.stats.creditsRemaining -= 1;
+
+    // // 🧾 8. Update recent lectures
+    // user.recentLectures.unshift({
+    //   lectureId: lecture._id,
+    //   title: lecture.title,
+    //   createdAt: lecture.createdAt,
+    // });
+
+    // if (user.recentLectures.length > 10) {
+    //   user.recentLectures = user.recentLectures.slice(0, 10);
+    // }
+
+    // await user.save();
+
+    // // ✅ 9. Response
+    // res.status(201).json({
+    //   message: "Lecture created successfully",
+    //   lecture,
+    //   stats: user.stats,
+    //   recentLectures: user.recentLectures,
+    // });
   } catch (error) {
     console.error("Create Lecture Error:", error);
     res.status(500).json({ message: "Server error" });
@@ -149,7 +193,6 @@ export const getLectureById = async (req, res) => {
 };
 
 // Lecture Title
-
 export const updateLectureTitle = async (req, res) => {
   try {
     const { title } = req.body;
@@ -158,36 +201,54 @@ export const updateLectureTitle = async (req, res) => {
       return res.status(400).json({ message: "Title is required" });
     }
 
-      const user = await User.findOne({ email: req.user.email });
+    const user = await User.findOne({ email: req.user.email });
 
-      const lecture = await Lecture.findOne({
-        _id: req.params.id,
-        user: user._id,
-      });
+    const lecture = await Lecture.findOne({
+      _id: req.params.id,
+      user: user._id,
+    });
 
-      if (!lecture) {
-        return res.status(404).json({ message: "Lecture not found" });
-      }
+    if (!lecture) {
+      return res.status(404).json({ message: "Lecture not found" });
+    }
 
-      lecture.title = title.trim();
-      await lecture.save();
+    lecture.title = title.trim();
+    await lecture.save();
 
-      // Update title in recent lectures
-      const index = user.recentLectures.findIndex(
-        (l) => l.lectureId.toString() === lecture._id.toString()
-      );
+    // Update title in recent lectures
+    const index = user.recentLectures.findIndex(
+      (l) => l.lectureId.toString() === lecture._id.toString(),
+    );
 
-      if (index !== -1) {
-        user.recentLectures[index].title = lecture.title;
-        await user.save();
-      }
+    if (index !== -1) {
+      user.recentLectures[index].title = lecture.title;
+      await user.save();
+    }
 
-      res.json({ message: "Title updated successfully", lecture });
+    res.json({ message: "Title updated successfully", lecture });
   } catch (err) {
     console.error("Update Lecture Title Error:", err);
     res.status(500).json({ message: "Server error" });
   }
-}
+};
+
+export const getLectureProgress = async (req, res) => {
+  try {
+    const lecture = await Lecture.findById(req.params.id);
+
+    if (!lecture) {
+      return res.status(404).json({ message: "Lecture not found" });
+    }
+
+    res.json({
+      progress: lecture.processing.progress,
+      stage: lecture.processing.stage,
+      status: lecture.processing.status,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 // import Lecture from "../models/lectureModel.js";
 // import User from "../models/userModels.js";

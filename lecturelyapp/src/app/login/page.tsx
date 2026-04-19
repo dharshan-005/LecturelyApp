@@ -103,23 +103,23 @@ export default function Login() {
           </div>
         </div>
 
-        <div className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm p-12 rounded-3xl shadow-xl dark:shadow-2xl border border-indigo-50 dark:border-slate-700 text-center transition-all duration-300 hover:shadow-2xl flex flex-col gap-4 w-full max-w-md">
+        <div className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm m-5 p-8 md:p-12 rounded-3xl shadow-xl dark:shadow-2xl border border-indigo-50 dark:border-slate-700 text-center transition-all duration-300 hover:shadow-2xl flex flex-col gap-2 md:gap-4 md:w-full max-w-md">
           {/* <div className="bg-[linear-gradient(106.91deg,rgba(255,255,255,0.1)_3.73%,rgba(255,255,255,0.02)_97.95%)] shadow-[3px_4px_8px_rgba(0,0,0,0.25)] backdrop-blur-[7.5px] rounded-[25px] flex flex-col gap-4 w-full max-w-md p-12 text-center"> */}
           <div>
             <img
               src={logo.src}
               alt="Lecturely.Ai Logo"
-              className="w-25 h-25 mx-auto rounded-2xl"
+              className="w-15 md:w-25 h-15 md:h-25 mx-auto rounded-2xl"
             />
           </div>
-          <h1 className="font-bold text-2xl">Welcome to Lecturely.AI</h1>
-          <h2 className="font-semibold text-[22px]">Login</h2>
+          <h1 className="font-bold md:text-2xl">Welcome to Lecturely.AI</h1>
+          <h2 className="font-semibold md:text-[22px]">Login</h2>
           {/* <h3>Login with Google</h3> */}
           <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
             <Input
               type="email"
               placeholder="Email"
-              className="border-black"
+              className="border-black text-[12px] md:text-[14px]"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -129,7 +129,7 @@ export default function Login() {
               <Input
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
-                className="border-black"
+                className="border-black text-[12px] md:text-[14px]"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -150,7 +150,7 @@ export default function Login() {
               Forgot your password?
             </a>
 
-            <button className="bg-black text-white px-4 py-2 rounded hover:bg-indigo-500 hover:text-black cursor-pointer">
+            <button className="bg-black text-white md:px-4 py-2 rounded hover:bg-indigo-500 hover:text-black cursor-pointer">
               Login
             </button>
 
@@ -163,7 +163,7 @@ export default function Login() {
             onClick={() => {
               signIn("google", { callbackUrl: "/" });
             }}
-            className="bg-white text-black px-4 py-2 rounded hover:bg-gray-200 cursor-pointer flex justify-center items-center gap-2 border border-gray-300"
+            className="bg-white text-black md:px-4 py-2 rounded hover:bg-gray-200 cursor-pointer flex justify-center items-center gap-2 border border-gray-300"
           >
             <FaGoogle />
             Login with Google
@@ -171,12 +171,12 @@ export default function Login() {
 
           <p>
             Don't have an account?{" "}
-            <a href="/register" className="text-blue-500 hover:underline mt-4">
+            <a href="/register" className="text-blue-500 hover:underline mt-4 text-[14px] md:text-[16px]">
               Register
             </a>
           </p>
 
-          <a href="/" className="text-blue-500 hover:underline mt-2">
+          <a href="/" className="text-blue-500 hover:underline md:mt-2 text-[14px] md:text-[16px]">
             Go to Home
           </a>
         </div>
