@@ -4,13 +4,24 @@ from services.audio_extractor import extract_audio
 from services.transcriber import generate_subtitles
 from services.translator import translate_subtitles
 from services.cleanup import delete_file
+from pydantic import BaseModel
 
 import os
 
 router = APIRouter()
 
+class RequestBody(BaseModel):
+    url: str
+    target_lang: str
+
+
 @router.post("/generate-from-url")
-async def generate_from_url(url: str, target_lang: str, background_tasks: BackgroundTasks):
+async def generate_from_url(body: RequestBody, background_tasks: BackgroundTasks):
+    url= body.url
+    target_lang= body.target_lang
+
+    print("🔥 PYTHON HIT")
+    print("URL:", url)
 
     # 1️⃣ Download video
     video_path = await download_video(url)

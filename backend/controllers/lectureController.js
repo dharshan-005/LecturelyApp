@@ -1,6 +1,7 @@
 import Lecture from "../models/lectureModel.js";
 import User from "../models/userModels.js";
 import { processPipeline } from "../services/pipelineService.js";
+import { processWithAI } from "../services/aiService.js";
 
 export const createLecture = async (req, res) => {
   try {
@@ -9,7 +10,8 @@ export const createLecture = async (req, res) => {
     // ✅ 1. Validate input
     const isAuthenticated = !!req.user;
 
-    let finalTitle = title?.trim();
+    // let finalTitle = title?.trim();
+    let finalTitle = (title?.trim() || "Lecture") + " " + Date.now();
 
     if (isAuthenticated && !finalTitle) {
       return res.status(400).json({ message: "Title is required" });
@@ -47,9 +49,9 @@ export const createLecture = async (req, res) => {
       },
     });
 
-    if (existingLecture) {
-      return res.status(409).json({ message: "Lecture already exists" });
-    }
+    // if (existingLecture) {
+    //   return res.status(409).json({ message: "Lecture already exists" });
+    // }
 
     // 🔥 5. PROCESS PIPELINE (CORE PART)
     // ✅ 5. Create lecture FIRST (before pipeline)
@@ -67,8 +69,88 @@ export const createLecture = async (req, res) => {
     });
 
     // 🔥 6. Start pipeline (DO NOT await)
+    // const language = targetLang || "ta";
+    // processPipeline(lecture._id, videoUrl, language);
     const language = targetLang || "ta";
-    processPipeline(lecture._id, videoUrl, language);
+
+    // 🔥 Detect YouTube
+    if (videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be")) {
+      console.log("Using Python pipeline for YouTube...");
+
+      await Lecture.findByIdAndUpdate(lecture._id, {
+        "processing.progress": 20,
+        "processing.stage": "Downloading video...",
+      });
+
+      fetch("http://localhost:8000/generate-from-url", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          url: videoUrl,
+          target_lang: language,
+        }),
+      })
+        .then(async (res) => {
+          const text = await res.text();
+          console.log("RAW PYTHON RESPONSE:", text);
+
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch (e) {
+            throw new Error("Python returned invalid JSON: " + text);
+          }
+
+          return data;
+        })
+        .then(async (data) => {
+          console.log("Running AI for summary...");
+
+          await Lecture.findByIdAndUpdate(lecture._id, {
+            "processing.progress": 60,
+            "processing.stage": "Transcribing & translating...",
+          });
+
+          // 🔥 STEP 1: Combine subtitles into full text
+          const fullText = data.subtitles.map((s) => s.original).join(" ");
+
+          // 🔥 STEP 2: Run your existing AI
+          const aiResult = await processWithAI(fullText, language);
+
+          await Lecture.findByIdAndUpdate(lecture._id, {
+            "processing.progress": 90,
+            "processing.stage": "Generating notes...",
+          });
+
+          // 🔥 STEP 3: Save everything
+          await Lecture.findByIdAndUpdate(lecture._id, {
+            subtitles: data.subtitles,
+            content: aiResult.refined,
+            notes: aiResult.notes, // ✅ THIS ENABLES SUMMARY
+            videoUrl: data.video,
+            processing: {
+              progress: 100,
+              stage: "Completed",
+              status: "completed",
+            },
+          });
+
+          console.log("YouTube + AI processing done");
+        })
+        .catch(async (err) => {
+          console.error("Python pipeline failed:", err);
+
+          await Lecture.findByIdAndUpdate(lecture._id, {
+            "processing.status": "failed",
+            "processing.stage": "YouTube processing failed",
+          });
+        });
+    } else {
+      // ✅ normal flow (file uploads)
+      processPipeline(lecture._id, videoUrl, language);
+    }
 
     // 🔁 7. Update stats immediately (optional — your choice)
     user.stats.subtitlesGenerated += 1;

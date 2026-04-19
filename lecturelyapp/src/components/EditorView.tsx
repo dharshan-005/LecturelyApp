@@ -409,7 +409,7 @@ export const EditorView: React.FC<EditorViewProps> = ({
                     {concepts.map((c, i) => (
                       <span
                         key={i}
-                        className="px-2 py-1 bg-indigo-100 rounded text-xs"
+                        className="px-2 py-1 bg-indigo-100 dark:bg-indigo-500 rounded text-xs"
                       >
                         {c}
                       </span>
